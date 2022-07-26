@@ -9,7 +9,7 @@ import ConnectWallet from '../components/ConnectWallet.js';
 import LensLogin from "../components/LensLogin.js";
 import GetHandle from "../components/GetHandle.js";
 import ProfileHandleInput from "../components/ProfileHandleInput.js";
-import GetFollowing from "../components/GetFollowing.js";
+import DisplayFollowing from "../components/DisplayFollowing.js";
 
 // context
 export const AppContext = createContext();
@@ -19,25 +19,28 @@ export default function Home() {
   const { connectWallet, address, error, provider } = useWeb3();
   const [myProfiles, setMyProfiles] = useState([]);
   const [profileHandleInput, setProfileHandleInput] = useState(null);
+  const [profileAddress, setProfileAddress] = useState(null);
+  const [followingList, setFollowingList] = useState([])
     
   const contextObj = {
     myProfiles,
     setMyProfiles,
     profileHandleInput,
     setProfileHandleInput,
+    profileAddress,
+    setProfileAddress,
+    followingList,
+    setFollowingList,
   }
 
   return (
     <AppContext.Provider value={contextObj}>
-      {address ? 
-        <LensLogin/>
-       : 
-        <ConnectWallet/>
-      }
+      <ConnectWallet/>
+      {address? <LensLogin/> : null}
       <GetHandle/>
       <ProfileHandleInput/>
       {profileHandleInput}
-      <GetFollowing/>
+      {/* <DisplayFollowing/> */}
     </AppContext.Provider>
   );
 }

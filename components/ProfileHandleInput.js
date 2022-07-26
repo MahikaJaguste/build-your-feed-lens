@@ -4,26 +4,42 @@ import { AppContext } from '../pages/index.js'
 // lens
 import { following } from "../lens-api/follow/following";
 import { profile } from "../lens-api/profile/get-profile";
+import { useWeb3 } from "@3rdweb/hooks";
 
 
 function ProfileHandleInput() {
 
-    const { profileHandleInput, setProfileHandleInput } = useContext(AppContext);
-    const [profileAddress, setProfileAddress] = useState(null)
+    const { profileHandleInput, 
+        setProfileHandleInput,
+        profileAddress, 
+        setProfileAddress,
+        followingList,
+        setFollowingList
+     } = useContext(AppContext);
+
     const [tempProfileHandleInput, setTempProfileHandleInput] = useState(null);
+    const { address } = useWeb3();
 
     async function doGetProfile() {
         if(profileHandleInput){
+
             const response = await profile(profileHandleInput);
-            setProfileAddress(response.data.profile.ownedBy)
             console.log(response);
+            if(response.data.profile){
+                setProfileAddress(response.data.profile.ownedBy)
+            }
+            else {
+                alert('No such profile exists!')
+            }
+            
         }
     }
 
     async function doGetFollowing() {
         if(profileAddress){
-            const response = await following(profileAddress, 10);
+            const response = await following(profileAddress, 20);
             console.log(response)//.following.items[0].profile.id);
+            setFollowingList(response.following)
         }
     }
 
@@ -35,7 +51,9 @@ function ProfileHandleInput() {
         doGetFollowing()
     }, [profileAddress]);
 
-
+    useEffect(() => {
+        setProfileAddress(address);
+    }, [address])
 
     const handleSubmit = async (e) => {
         e.preventDefault();

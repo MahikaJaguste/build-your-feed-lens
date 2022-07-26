@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useWeb3 } from "@3rdweb/hooks";
 
-function GetFollowing() {
+function DisplayFollowing() {
 
     const { address, provider } = useWeb3();
     
@@ -19,4 +19,4 @@ function GetFollowing() {
     );
 }
     
-export default GetFollowing;
+export default DisplayFollowing;
