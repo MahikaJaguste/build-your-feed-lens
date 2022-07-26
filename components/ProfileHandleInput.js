@@ -38,26 +38,36 @@ function ProfileHandleInput() {
     async function doGetFollowing() {
         if(profileAddress){
             const response = await following(profileAddress, 20);
-            console.log(response)//.following.items[0].profile.id);
-            setFollowingList(response.following)
+            console.log(response.data.following);
+            if(response.data.following){
+                setFollowingList(response.data.following.items)
+            }
+            else{
+                setFollowingList([])
+            }
         }
     }
 
-    useEffect(() => {
-        doGetProfile()
-    }, [profileHandleInput]);
+    // useEffect(() => {
+    //     doGetProfile()
+    // }, [profileHandleInput]);
 
-    useEffect(() => {
-        doGetFollowing()
-    }, [profileAddress]);
+    // useEffect(() => {
+    //     doGetFollowing()
+    // }, [profileAddress]);
 
-    useEffect(() => {
-        setProfileAddress(address);
-    }, [address])
+    // useEffect(() => {
+    //     setProfileAddress(address);
+        
+    // }, [address])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setProfileHandleInput(tempProfileHandleInput);
+        setProfileAddress(null);
+        setFollowingList(null);
+        await doGetProfile();
+        await doGetFollowing();
     };
 
     return (

@@ -20,7 +20,7 @@ export default function Home() {
   const [myProfiles, setMyProfiles] = useState([]);
   const [profileHandleInput, setProfileHandleInput] = useState(null);
   const [profileAddress, setProfileAddress] = useState(null);
-  const [followingList, setFollowingList] = useState([])
+  const [followingList, setFollowingList] = useState(null)
     
   const contextObj = {
     myProfiles,
@@ -39,7 +39,7 @@ export default function Home() {
       {address? <LensLogin/> : null}
       <GetHandle/>
       <ProfileHandleInput/>
-      {profileHandleInput}
+      <DisplayFollowing/>
       {/* <DisplayFollowing/> */}
     </AppContext.Provider>
   );

@@ -8,6 +8,7 @@ const ConnectWallet = () => {
     const { address, chainId, provider, connectWallet, disconnectWallet, getNetworkMetadata } = useWeb3();
     const { switchNetwork } = useSwitchNetwork();
 
+    
     return (
     <>
     {address

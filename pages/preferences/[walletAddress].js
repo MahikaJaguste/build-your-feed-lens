@@ -8,7 +8,7 @@ import protocolMapping from "../../utils/preferences/protocolMappingJSON.js";
 export default function Preferences({ protocolPreference, hasPreference }) {
 
     const router = useRouter();
-    const address = router.query.id;
+    const address = router.query.walletAddress;
 
     const [protocolInfo, setProtocolInfo] = useState(protocolPreference);
 
@@ -44,7 +44,6 @@ export default function Preferences({ protocolPreference, hasPreference }) {
                     <> 
                         <input
                             onChange={handleChange} // <-- pass item to handler
-                            //checked={protocolPreference.includes(key.id) || protocolInfo.includes(key.id)}
                             checked={protocolInfo.includes(`${key.id}`)}
                             style={{ margin: "20px" }}
                             type="checkbox"
@@ -67,7 +66,7 @@ export default function Preferences({ protocolPreference, hasPreference }) {
 // This gets called on every request
 export async function getServerSideProps({params}) {
     // Fetch data from external API
-    const [result, success] = await GetADocument(params.id)
+    const [result, success] = await GetADocument(params.walletAddress)
   
     // Pass data to the page via props
     return { props: { 
