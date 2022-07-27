@@ -1,22 +1,43 @@
-import "../styles/globals.css";
-import { ThirdwebWeb3Provider } from "@3rdweb/hooks";
+import { createContext, useEffect, useState } from "react";
 
-import "regenerator-runtime/runtime";
+export const AppContext = createContext();
 
 function MyApp({ Component, pageProps }) {
-  const supportedChainIds = [80001, 137];
 
-  const connectors = {
-    injected: {},
-  };
+  const [provider, setProvider] = useState(undefined);
+  const [signer, setSigner] = useState(undefined);
+  const [signerAddress, setSignerAddress] = useState(undefined);
+  const [networkId, setNetworkId] = useState(undefined);
+
+  const [myProfiles, setMyProfiles] = useState([]);
+  const [profileHandleInput, setProfileHandleInput] = useState(null);
+  const [profileAddress, setProfileAddress] = useState(null);
+  const [followingList, setFollowingList] = useState(null)
+    
+  const contextObj = {
+    provider,
+    setProvider,
+    signer,
+    setSigner,
+    signerAddress,
+    setSignerAddress,
+    networkId,
+    setNetworkId,
+
+    myProfiles,
+    setMyProfiles,
+    profileHandleInput,
+    setProfileHandleInput,
+    profileAddress,
+    setProfileAddress,
+    followingList,
+    setFollowingList,
+  }
 
   return (
-    <ThirdwebWeb3Provider
-      supportedChainIds={supportedChainIds}
-      connectors={connectors}
-    >
+    <AppContext.Provider value={contextObj}>
       <Component {...pageProps} />
-    </ThirdwebWeb3Provider>
+    </AppContext.Provider>
   );
 }
 

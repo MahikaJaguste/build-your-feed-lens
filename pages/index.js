@@ -1,46 +1,32 @@
-import { createContext, useState } from "react";
-import { ethers } from  'ethers';
-
-// web3
-import { useWeb3 } from "@3rdweb/hooks";
+import { useContext, useEffect, useState } from "react";
 
 // components
-import ConnectWallet from '../components/ConnectWallet.js';
-import LensLogin from "../components/LensLogin.js";
-import GetHandle from "../components/GetHandle.js";
-import ProfileHandleInput from "../components/ProfileHandleInput.js";
-import DisplayFollowing from "../components/DisplayFollowing.js";
+import dynamic from "next/dynamic";
+const ConnectWallet = dynamic(() => import("../components/ConnectWallet"), {
+  ssr: false,
+});
+import LandingPage from "../components/LandingPage.js";
 
 // context
-export const AppContext = createContext();
+import { AppContext } from "./_app.js";
 
 export default function Home() {
 
-  const { connectWallet, address, error, provider } = useWeb3();
-  const [myProfiles, setMyProfiles] = useState([]);
-  const [profileHandleInput, setProfileHandleInput] = useState(null);
-  const [profileAddress, setProfileAddress] = useState(null);
-  const [followingList, setFollowingList] = useState(null)
-    
-  const contextObj = {
-    myProfiles,
-    setMyProfiles,
-    profileHandleInput,
-    setProfileHandleInput,
-    profileAddress,
-    setProfileAddress,
-    followingList,
-    setFollowingList,
-  }
+  const { provider,
+          signer,
+          signerAddress,
+          networkId
+        } = useContext(AppContext)
+
+  useEffect(() => {
+    console.log('In index.js', provider, signer, signerAddress, networkId);
+  }, [networkId])
+
 
   return (
-    <AppContext.Provider value={contextObj}>
+    <>
+      <LandingPage/>
       <ConnectWallet/>
-      {address? <LensLogin/> : null}
-      <GetHandle/>
-      <ProfileHandleInput/>
-      <DisplayFollowing/>
-      {/* <DisplayFollowing/> */}
-    </AppContext.Provider>
+    </>
   );
 }

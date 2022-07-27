@@ -1,16 +1,14 @@
 import { useContext } from "react";
-import { useWeb3 } from "@3rdweb/hooks";
-import { AppContext } from '../pages/index.js'
+import { AppContext } from '../pages/_app.js'
 import Image from "next/image";
 
 // lens
-import { createProfile } from "../lens-api/profile/create-profile";
 import { getProfiles } from "../lens-api/profile/get-profiles";
 
 
 function GetHandle() {
 
-    const { address } = useWeb3();
+    const { address } = {};
     const {myProfiles, setMyProfiles} = useContext(AppContext);
 
     async function doGetMyProfiles() {

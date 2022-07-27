@@ -18,6 +18,7 @@ async function contractInteraction(inputAddress, contractAddress) {
 
     // try catch
     const url = new URL(`${baseURL}/${chainId}/address/${inputAddress}/transactions_v2/?key=${APIKEY}&no-logs=true&page-size=10000&primer=${primer_part}`)
+    console.log(`${baseURL}/${chainId}/address/${inputAddress}/transactions_v2/?key=${APIKEY}&no-logs=true&page-size=10000&primer=${primer_part}`)
     const response = await fetch(url);
     const result = await response.json();
     const data = result.data;

@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from '../pages/index.js'
+import { AppContext } from '../pages/_app.js'
 
 // lens
 import { following } from "../lens-api/follow/following";
 import { profile } from "../lens-api/profile/get-profile";
-import { useWeb3 } from "@3rdweb/hooks";
 
 
 function ProfileHandleInput() {
@@ -18,7 +17,6 @@ function ProfileHandleInput() {
      } = useContext(AppContext);
 
     const [tempProfileHandleInput, setTempProfileHandleInput] = useState(null);
-    const { address } = useWeb3();
 
     async function doGetProfile() {
         if(profileHandleInput){
@@ -76,7 +74,7 @@ function ProfileHandleInput() {
             <label>Enter handle (eg. vitalik.eth)</label>
             <input 
                 type="text"  
-                id='profileHandleInput'
+                id='profileHandleInputForm'
                 onChange={(e) => setTempProfileHandleInput(e.target.value)}/>
             <button type="submit">Search</button>
         </form>

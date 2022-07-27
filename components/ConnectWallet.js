@@ -1,47 +1,91 @@
-import { useEffect, useState } from "react"
-import { useWeb3, useSwitchNetwork } from "@3rdweb/hooks"
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../pages/_app";
+import { useWeb3Modal } from "../hooks/web3";
 
+const truncateAddress = (address) => {
+  return address.slice(0, 6) + "..." + address.slice(-4);
+};
+
+const toHex = (num) => {
+    const val = Number(num);
+    return "0x" + val.toString(16);
+};
 
 const ConnectWallet = () => {
 
-    const supportChainIds = [80001, 137];
-    const { address, chainId, provider, connectWallet, disconnectWallet, getNetworkMetadata } = useWeb3();
-    const { switchNetwork } = useSwitchNetwork();
+    const { connectWallet, disconnectWallet, modalProvider, modalSigner, modalSignerAddress, modalNetworkId, modalError } = useWeb3Modal();
+    const { 
+        provider,
+        setProvider,
+        signer,
+        setSigner,
+        signerAddress,
+        setSignerAddress,
+        networkId,
+        setNetworkId } = useContext(AppContext);
 
-    
+    useEffect(() => {
+        setProvider(modalProvider)
+        setSigner(modalSigner)
+        setSignerAddress(modalSignerAddress)
+        setNetworkId(modalNetworkId)
+      }, [modalNetworkId])
+
+    useEffect(()=>{
+        if(provider){
+            provider.provider.on("chainChanged", (e) => {
+                if(e != toHex(80001)){
+                    switchNetwork();
+                }
+            });
+        }
+    }, [provider])
+
+    const handleClickConnect = async () => {
+        await connectWallet();
+    };
+
+    const handleClickAddress = () => {
+        disconnectWallet();
+    };
+
+    const switchNetwork = async () => {
+        try {
+          console.log('in switch network try')
+          await provider.provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: toHex(80001) }]
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            try {
+              await provider.provider.request({
+                method: "wallet_addEthereumChain",
+                params: [networkParams[toHex(80001)]]
+              });
+            } catch (error) {
+              setError(error);
+            }
+          }
+        }
+    };
+
+    useEffect(() => {
+        console.log("inEffect", networkId)
+        // if ((signerAddress && networkId.chainId !== 80001) && (signerAddress && networkId.chainId !== 137)) {
+        if ((signerAddress && networkId.chainId !== 80001)) {
+          switchNetwork();
+        }
+    }, [networkId]);
+
     return (
-    <>
-    {address
-    ? <>
-        Address: {address}
-        <br />
-        Chain ID: {chainId}
-        <br />
-
-        {/* {address && (
-            <button onClick={disconnectWallet("injected")}>
-            Disconnect
-            </button>
-        )}
-
-        <p>Switch Network</p>
-        {supportChainIds.map((cId) => (
-            <button key={cId} onClick={() => switchNetwork(cId)}>
-            {getNetworkMetadata(cId).chainName}
-            </button>
-        ))} */}
-    </> 
-    : <>
-        <button onClick={() => {
-            connectWallet("injected");
-        }}>
-            Connect Wallet
-        </button>        
-    </>
-     }
-
-    </>
-    )
+        <button
+        onClick={modalSignerAddress ? handleClickAddress : handleClickConnect}>
+        <div>
+            {modalSignerAddress ? truncateAddress(modalSignerAddress) : "Connect Wallet"}
+        </div>
+        </button>
+    );
 }
 
 export default ConnectWallet;

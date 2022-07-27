@@ -9,7 +9,7 @@ export async function AddDocument_CustomID(address, protocolInfo) {
         preference: protocolInfo,
     })
     .then(() => {
-        alert('Data added successfully.')
+        alert('Data saved successfully.')
     })
     .catch((err) => {
         console.log(err)

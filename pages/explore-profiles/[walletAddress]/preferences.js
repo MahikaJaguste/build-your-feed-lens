@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 
 // api
-import {AddDocument_CustomID, GetADocument} from '../../utils/db/crudData.js';
-import protocolMapping from "../../utils/preferences/protocolMappingJSON.js";
+import {AddDocument_CustomID, GetADocument} from '../../../utils/db/crudData.js';
+import protocolMapping from "../../../utils/preferences/protocolMappingJSON.js";
 
 export default function Preferences({ protocolPreference, hasPreference }) {
 
@@ -64,9 +64,10 @@ export default function Preferences({ protocolPreference, hasPreference }) {
 }
 
 // This gets called on every request
-export async function getServerSideProps({params}) {
+export async function getServerSideProps({query}) {
     // Fetch data from external API
-    const [result, success] = await GetADocument(params.walletAddress)
+    const [result, success] = await GetADocument(query.walletAddress)
+    // const result = [], success = false;
   
     // Pass data to the page via props
     return { props: { 
