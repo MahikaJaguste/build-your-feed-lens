@@ -1,7 +1,8 @@
 import { apolloClient } from './apollo-client'
 import { gql } from '@apollo/client'
+import { fetchMore } from '@apollo/client';
 
-const GET_FOLLOWING = `
+export const GET_FOLLOWING = `
   query($request: FollowingRequest!) {
     following(request: $request) { 
 		items {
@@ -64,19 +65,20 @@ const GET_FOLLOWING = `
   }
 `;
 
-const followingRequest = (walletAddress, limit) => {
+const followingRequest = (walletAddress, limit, cursor) => {
   return apolloClient.query({
     query: gql(GET_FOLLOWING),
     variables: {
       request: {
         address: walletAddress,
         limit: limit,
+        cursor: cursor,
       },
     },
   });
 };
 
-export const following = async (address, limit) => {
-  const result = await followingRequest(address, limit);
+export const following = async (address, limit, cursor=null) => {
+  const result = await followingRequest(address, limit, cursor);
   return result;
 };
