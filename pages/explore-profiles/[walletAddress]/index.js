@@ -8,6 +8,7 @@ import contractInteraction from "../../../utils/covalent/contractInteraction.js"
 import ProfileSearch from "../../../components/ProfileSearch.js";
 
 import doGetFollowing from "../../../utils/followingList/doGetFollowing"
+import { profile } from "../../../lens-api/profile/get-profile";
 
 export default function ProfileFollowing({
     signerAddress,
@@ -15,8 +16,10 @@ export default function ProfileFollowing({
     contractAddress,
     contractName  }) {
 
-
-    const [isFetchingMore, setIsFetchingMore] = useState(false);   
+    const [isFetchingMore, setIsFetchingMore] = useState(false); 
+    const [details, setDetails] = useState(undefined); 
+    const [nodetails, setNoDetails] = useState(false);
+    const [selectedProfileId, setSelectedProfileId] = useState(undefined);
 
     const {
         profileHandleInput,
@@ -29,12 +32,25 @@ export default function ProfileFollowing({
 
     const router = useRouter();
 
-    async function handleMore(prevFollowingList, prevFollwowingPageInfo) {
+    async function handleFetchMore(prevFollowingList, prevFollwowingPageInfo) {
         setIsFetchingMore(true);
         const [response, newPageInfo] = await doGetFollowing(profileAddress, 10, prevFollwowingPageInfo.next, followingList)
         setFollowingList(response);
         setFollowingPageInfo(newPageInfo);
         setIsFetchingMore(false);
+    }
+
+    async function handleGetDetails(profileOwner, contractAddress, profileId) {
+        setNoDetails(false);
+        setDetails(undefined)
+        setSelectedProfileId(profileId);
+        const response = await contractInteraction(profileOwner, contractAddress);
+        if(response == null) {
+            setNoDetails(true);
+        }
+        else{
+            setDetails(response);
+        }
     }
 
     return (
@@ -60,10 +76,21 @@ export default function ProfileFollowing({
             <>
             {followingList.map((obj, index) => {
                     // console.log(obj.profile)
+                    const profile = obj.profile
                     return (
-                    <div key={obj.profile.id}>
-                        <div>{obj.profile.handle}</div>
-                        <button onClick={() => {contractInteraction(obj.profile.ownedBy, contractAddress)}}>Details</button>
+                    <div key={profile.id}>
+                        <div>{profile.handle}</div>
+                        <button onClick={() => {handleGetDetails(profile.ownedBy, contractAddress, profile.id)}}>Details</button>
+                        {selectedProfileId == profile.id ? 
+                            nodetails ? 
+                                "No useful data found" : 
+                                details ? 
+                                details[0].contractInteraction : 
+                                null
+                            : details ? 
+                            details[0].contractInteraction : 
+                            null
+                        }
                         <br/>
                         <br/>
                     </div>
@@ -73,7 +100,7 @@ export default function ProfileFollowing({
             {followingList && followingList.length == followingPageInfo.totalCount ?
                 null :
                 !isFetchingMore ?
-                    <button onClick={()=> handleMore(followingList, followingPageInfo)}>Get more profiles</button>
+                    <button onClick={()=> handleFetchMore(followingList, followingPageInfo)}>Get more profiles</button>
                 :
                 <p>Fetching more profiles</p>
             }

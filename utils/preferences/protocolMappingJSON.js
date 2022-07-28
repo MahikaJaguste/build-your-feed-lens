@@ -19,6 +19,11 @@ const protocolMapping = [
         "name": "Decentraland",
         "address": "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942",
     },
+    {
+        "id": 4,
+        "name": "Uniswap",
+        "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
+    }
 ]
 
 export default protocolMapping;
