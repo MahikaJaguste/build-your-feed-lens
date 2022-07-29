@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
+import {AppContext} from '../../_app';
 
 // lens
 import doGetProfile from "../../../utils/createList/doGetProfile";
@@ -7,10 +8,23 @@ import doGetProfile from "../../../utils/createList/doGetProfile";
 // db
 import { AddDocument_AutoID } from "../../../utils/db/createList/crudData";
 
+// ipfs
+import { create } from 'ipfs-http-client';
+import getMetadata from "../../../utils/followListNft/upload";
+
+import dynamic from "next/dynamic";
+const GetSigner = dynamic(() => import("../../../components/GetSigner"), {
+  ssr: false,
+});
+
+const client = create("https://ipfs.infura.io:5001/api/v0");
+
 export default function CreateList() {
 
     const router = useRouter();
     const signerAddress = router.query.walletAddress;
+
+    const { signer } = useContext(AppContext);
 
     const [tempHandleInput, setTempHandleInput] = useState(undefined);
     const [creatorList, setCreatorList] = useState([]);
@@ -35,6 +49,12 @@ export default function CreateList() {
 
     async function handleCreateList(){
         await AddDocument_AutoID(signerAddress, listTitle, creatorList);
+        const metadata = getMetadata(signerAddress, listTitle, creatorList);
+        console.log(metadata, JSON.stringify(metadata));
+        const ipfsMetadata = await client.add(JSON.stringify(metadata));
+        console.log(ipfsMetadata.path);
+        console.log(signer);
+        // mint nft here
         setCreatorList([])
         setListTitle(undefined)
         setTempHandleInput(undefined)
@@ -42,6 +62,7 @@ export default function CreateList() {
 
     return (
     <>
+        <GetSigner/>
         <form onSubmit={handleAdd}>
             <label>Enter handle (eg. vitalik)</label>
             <input 
