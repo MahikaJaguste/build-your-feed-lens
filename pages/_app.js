@@ -1,7 +1,4 @@
-import { createContext, useEffect, useState } from "react";
-
-// abi
-import LIST_NFT_ABI from '../artifacts/contracts/ListNFT.sol/ListNFT.json';
+import { createContext, useState } from "react";
 
 export const AppContext = createContext();
 
@@ -17,15 +14,6 @@ function MyApp({ Component, pageProps }) {
   const [profileAddress, setProfileAddress] = useState(null);
   const [followingList, setFollowingList] = useState(null);
   const [followingPageInfo, setFollowingPageInfo] = useState(null);
-
-  let listNFTContract;
-
-  useEffect(() => {
-    if(provider){
-      // const listNFTContractAddress = "";
-      // listNFTContract = new ethers.Contract(listNFTAddress, LIST_NFT_ABI.abi, provider);
-    }
-  }, [provider]);
 
     
   const contextObj = {
@@ -48,8 +36,6 @@ function MyApp({ Component, pageProps }) {
     setFollowingList,
     followingPageInfo, 
     setFollowingPageInfo,
-
-    listNFTContract
   }
 
   return (

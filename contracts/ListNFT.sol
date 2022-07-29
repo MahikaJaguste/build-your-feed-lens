@@ -11,13 +11,16 @@ contract ListNFT is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    event ListNFTMinted(address indexed to, uint256 tokenId, string uri);
+
     constructor() ERC721("LensList", "LST") {}
 
-    function mint(address to, string memory uri) public onlyOwner {
+    function mint(address to, string memory uri) public {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+        emit ListNFTMinted(to, tokenId, uri);
     }
 
     // The following functions are overrides required by Solidity.

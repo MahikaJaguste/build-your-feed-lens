@@ -2,6 +2,7 @@
 // require('@nomiclabs/hardhat-waffle');
 require('@nomiclabs/hardhat-ethers');
 require("@nomiclabs/hardhat-etherscan");
+require("@nomicfoundation/hardhat-chai-matchers");
 require("hardhat-deploy");
 require('dotenv').config();
 
