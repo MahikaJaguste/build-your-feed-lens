@@ -24,7 +24,7 @@ export default function CreateList() {
     const router = useRouter();
     const signerAddress = router.query.walletAddress;
 
-    const { signer } = useContext(AppContext);
+    const { signer, listNFTContract } = useContext(AppContext);
 
     const [tempHandleInput, setTempHandleInput] = useState(undefined);
     const [creatorList, setCreatorList] = useState([]);
@@ -49,12 +49,18 @@ export default function CreateList() {
 
     async function handleCreateList(){
         await AddDocument_AutoID(signerAddress, listTitle, creatorList);
+
         const metadata = getMetadata(signerAddress, listTitle, creatorList);
         console.log(metadata, JSON.stringify(metadata));
+
         const ipfsMetadata = await client.add(JSON.stringify(metadata));
-        console.log(ipfsMetadata.path);
+        console.log(`ipfs://${ipfsMetadata.path}`);
         console.log(signer);
+
         // mint nft here
+        // const txn = await listNFTContract.connect(signer).mint(signerAddress, `ipfs://${ipfsMetadata.path}`);
+        // await txn.wait();
+
         setCreatorList([])
         setListTitle(undefined)
         setTempHandleInput(undefined)

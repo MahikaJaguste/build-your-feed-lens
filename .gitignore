@@ -34,3 +34,7 @@ yarn-error.log*
 firebaseConfig.js
 serviceAccountKey.json
 covalentConfig.js
+
+artifacts
+cache
+.env

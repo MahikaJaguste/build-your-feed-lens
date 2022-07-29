@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.9.3",
     "axios": "^0.27.2",
     "dashify": "^2.0.0",
+    "dotenv": "^16.0.1",
     "ethers": "^5.6.9",
     "firebase": "^9.9.1",
     "firebase-admin": "^11.0.0",
@@ -29,7 +30,12 @@
     "web3modal": "^1.9.8"
   },
   "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "@openzeppelin/contracts": "^4.7.2",
     "eslint": "8.20.0",
-    "eslint-config-next": "12.2.3"
+    "eslint-config-next": "12.2.3",
+    "hardhat": "^2.10.1",
+    "hardhat-deploy": "^0.11.12"
   }
 }

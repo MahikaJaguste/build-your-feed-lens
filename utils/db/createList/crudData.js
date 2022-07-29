@@ -10,7 +10,7 @@ export async function AddDocument_AutoID(address, title, creatorList) {
         creatorList,
     })
     .then(() => {
-        alert('Data saved successfully.')
+        console.log('Data saved successfully.')
     })
     .catch((err) => {
         console.log(err)
