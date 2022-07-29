@@ -2,10 +2,10 @@ import { useContext, useState } from "react";
 import { AppContext } from "../../_app";
 import { useRouter } from 'next/router';
 
-import {GetADocument} from '../../../utils/db/crudData.js';
+import {GetADocument} from '../../../utils/db/preferenceList/crudData.js';
 import protocolMapping from "../../../utils/preferences/protocolMappingJSON";
 import contractInteraction from "../../../utils/covalent/contractInteraction.js";
-import ProfileSearch from "../../../components/ProfileSearch.js";
+import FollowingProfileSearch from "../../../components/FollowingProfileSearch.js";
 
 import doGetFollowing from "../../../utils/followingList/doGetFollowing"
 import { profile } from "../../../lens-api/profile/get-profile";
@@ -64,7 +64,7 @@ export default function ProfileFollowing({
                     Preferences
             </button>
             <br/>
-            <ProfileSearch/>
+            <FollowingProfileSearch/>
             <br/>
             {/* {contractName.length ? contractName.map((key, index) => {
                 return(

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import doGetProfile from "../utils/followingList/doGetProfile"
 import doGetFollowing from "../utils/followingList/doGetFollowing"
 
-function ProfileSearch() {
+function FollowingProfileSearch() {
 
     const {
         profileHandleInput, 
@@ -79,4 +79,4 @@ function ProfileSearch() {
     );
 }
     
-export default ProfileSearch;
+export default FollowingProfileSearch;

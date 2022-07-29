@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 // api
-import {AddDocument_CustomID, GetADocument} from '../../../utils/db/crudData.js';
+import {AddDocument_CustomID, GetADocument} from '../../../utils/db/preferenceList/crudData.js';
 import protocolMapping from "../../../utils/preferences/protocolMappingJSON.js";
 
 export default function Preferences({ protocolPreference, hasPreference }) {

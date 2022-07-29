@@ -1,5 +1,5 @@
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import db from './index.js';
+import db from '../index.js';
 
 export async function AddDocument_CustomID(address, protocolInfo) {
     const ref = doc(db, "ProtocolPreference", address);
