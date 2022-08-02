@@ -18,6 +18,7 @@ function MyApp({ Component, pageProps }) {
   const [followingPageInfo, setFollowingPageInfo] = useState(null);
   const [exploreProfileDetails, setExploreProfileDetails] = useState(undefined)
   const [preference, setPreference] = useLocalStorage("erc20_preference_list", [])
+  const [erc721_preference, erc721_setPreference] = useLocalStorage("erc721_preference_list", [])
     
   const contextObj = {
     provider,
@@ -46,6 +47,8 @@ function MyApp({ Component, pageProps }) {
     setExploreProfileDetails,
     preference,
     setPreference,
+    erc721_preference,
+    erc721_setPreference
   }
 
   return (

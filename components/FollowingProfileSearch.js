@@ -7,6 +7,7 @@ import doGetProfile from "../utils/followingList/doGetProfile"
 import doGetFollowing from "../utils/followingList/doGetFollowing"
 
 import axios_getERC20 from "../utils/alchemy/axios_getERC20.js";
+import axios_getERC721 from "../utils/alchemy/axios_getERC721.js";
 
 function FollowingProfileSearch() {
 
@@ -75,13 +76,21 @@ function FollowingProfileSearch() {
     };
 
     async function handleGetDetails(profileOwner) {
-        const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
-        if(preference){
-            console.log(user_result_ids, preference)
-            const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
-            console.log(output.length, preference.length, output.length/preference.length * 100);
-            console.log(user_result)
-        }
+        // const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
+        // if(preference){
+        //     console.log(user_result_ids, preference)
+        //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
+        //     console.log(output.length, preference.length, output.length/preference.length * 100);
+        //     console.log(user_result)
+        // }
+        // const [user_result_ids, user_result] = 
+        await axios_getERC721(profileOwner);
+        // if(preference){
+        //     console.log(user_result_ids, preference)
+        //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
+        //     console.log(output.length, preference.length, output.length/preference.length * 100);
+        //     console.log(user_result)
+        // }
     }
 
     return (

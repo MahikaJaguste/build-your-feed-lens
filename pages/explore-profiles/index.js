@@ -2,13 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../_app";
 import { useRouter } from 'next/router';
 
-import protocolMapping from "../../utils/preferences/protocolMappingJSON"
-import contractInteraction from "../../utils/covalent/contractInteraction.js"
 import FollowingProfileSearch from "../../components/FollowingProfileSearch.js"
 
 import doGetFollowing from "../../utils/followingList/doGetFollowing"
-import { profile } from "../../lens-api/profile/get-profile"
 import axios_getERC20 from "../../utils/alchemy/axios_getERC20";
+import axios_getERC721 from "../../utils/alchemy/axios_getERC721";
+
+import erc20_metadata from "../../utils/preferences/erc20_metadata.js";
+import erc721_metadata from "../../utils/preferences/erc721_metadata.js";
 
 // components
 import dynamic from "next/dynamic";
@@ -17,14 +18,15 @@ const GetWeb3 = dynamic(() => import("../../components/GetWeb3"), {
 });
 
 // utils
-import { GetDocuments, GetADocument } from '../../utils/db/preferenceList/crudData.js';
-import erc20_metadata from "../../utils/preferences/erc20_metadata";
-import DisplayGraph from "../../components/DisplayGraph";
+import {GetDocuments, erc721_GetDocuments } from '../../utils/db/preferenceList/crudData.js';
+
 
 
 export default function ProfileFollowing({
     docData,
-    docKey }) {
+    docKey,
+    erc721_docData,
+    erc721_docKey }) {
 
     const [isFetchingMore, setIsFetchingMore] = useState(false); 
 
@@ -44,6 +46,8 @@ export default function ProfileFollowing({
         setExploreProfileDetails,
         preference,
         setPreference,
+        erc721_preference,
+        erc721_setPreference
     } = useContext(AppContext);
 
     const router = useRouter();
@@ -60,13 +64,21 @@ export default function ProfileFollowing({
     }
 
     async function handleGetDetails(profileOwner) {
-        const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
-        if(preference){
-            console.log(user_result_ids, preference)
-            const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
-            console.log(output.length, preference.length, output.length/preference.length * 100);
-            console.log(user_result)
-        }
+        // const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
+        // if(preference){
+        //     console.log(user_result_ids, preference)
+        //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
+        //     console.log(output.length, preference.length, output.length/preference.length * 100);
+        //     console.log(user_result)
+        // }
+        // const [erc721_user_result_ids, erc721_user_result] = 
+        await axios_getERC721(profileOwner);
+        // if(erc721_preference){
+        //     console.log(erc721_user_result_ids, erc721_preference)
+        //     const erc721_output = erc721_user_result_ids.filter((obj) => erc721_preference.indexOf(obj) !== -1);
+        //     console.log(erc721_output.length, erc721_preference.length, erc721_output.length/erc721_preference.length * 100);
+        //     console.log(erc721_user_result)
+        // }
     }
 
     function getPreference() {
@@ -78,15 +90,30 @@ export default function ProfileFollowing({
         }
     }
 
+    function erc721_getPreference() {
+        if(signerAddress) {
+            const index = erc721_docKey.indexOf(signerAddress)
+            if(index != -1) {
+                erc721_setPreference(erc721_docData[index]['preference'])
+            }
+        }
+    }
+
     useEffect(() => {
         if(signerAddress && !preference.length){
             getPreference()
+        }
+        if(signerAddress && !erc721_preference.length){
+            erc721_getPreference()
         }
     }, [signerAddress])
 
     useEffect(() => {
         if(!preference.length){
             getPreference()
+        }
+        if(!erc721_preference.length){
+            erc721_getPreference()
         }
     }, [])
 
@@ -152,8 +179,9 @@ export default function ProfileFollowing({
 
 export async function getStaticProps() {
     const [docData, docKey, success] = await GetDocuments()
+    const [erc721_docData, erc721_docKey, erc721_success] = await erc721_GetDocuments()
   
-    if(!success){
+    if(!success || !erc721_success){
         console.log('error in fetching preferences')
     }
 
@@ -162,6 +190,8 @@ export async function getStaticProps() {
         props: { 
             docData,
             docKey,
+            erc721_docData,
+            erc721_docKey
         },
         revalidate: 10,
     }

@@ -59,3 +59,62 @@ export async function GetDocuments(address) {
 
     return [docData, docKey, success];
 }
+
+export async function erc721_AddDocument_CustomID(address, protocolInfo) {
+    const ref = doc(db, "erc721_ProtocolPreference", address);
+
+    await setDoc(ref, {
+        walletAddress: address,
+        preference: protocolInfo,
+    })
+    .then(() => {
+        alert('Data saved successfully.')
+    })
+    .catch((err) => {
+        console.log(err)
+        alert("Error", err);
+    })
+}
+
+export async function erc721_GetADocument(address) {
+    const ref = doc(db, "erc721_ProtocolPreference", address);
+    const docSnap = await getDoc(ref);
+
+    let result = [];
+    let success = false;
+    if(docSnap.exists()){
+        result = docSnap.data().preference;
+        success = true;
+        console.log('result', result);
+    }
+    else{
+        console.log('no such document');
+    }
+    return [result, success];
+}
+
+export async function erc721_GetDocuments(address) {
+    const ref = collection(db, "erc721_ProtocolPreference");
+    const q = query(ref)
+
+    let docData = [], docKey = [], success = false;
+    let querySnapshot;
+    try {
+        querySnapshot = await getDocs(q);
+        
+        // console.log(querySnapshot)
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+            docData.push({...doc.data(), docId:doc.id});
+            docKey.push(doc.id);
+        });
+
+        success = true;
+    }
+    catch(err){
+        console.log(err);
+    }
+
+    return [docData, docKey, success];
+}
