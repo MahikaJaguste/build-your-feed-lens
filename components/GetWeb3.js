@@ -7,9 +7,10 @@ const toHex = (num) => {
     return "0x" + val.toString(16);
 };
 
-const GetSigner = () => {
+const GetWeb3 = () => {
 
     const { connectWallet, disconnectWallet, modalProvider, modalSigner, modalSignerAddress, modalNetworkId, modalError } = useWeb3Modal();
+    
     const { 
         provider,
         setProvider,
@@ -25,7 +26,7 @@ const GetSigner = () => {
         setSigner(modalSigner)
         setSignerAddress(modalSignerAddress)
         setNetworkId(modalNetworkId)
-      }, [modalNetworkId])
+    }, [modalNetworkId])
 
     useEffect(()=>{
         if(provider){
@@ -39,10 +40,6 @@ const GetSigner = () => {
 
     const handleClickConnect = async () => {
         await connectWallet();
-    };
-
-    const handleClickAddress = () => {
-        disconnectWallet();
     };
 
     const switchNetwork = async () => {
@@ -83,4 +80,4 @@ const GetSigner = () => {
     );
 }
 
-export default GetSigner;
+export default GetWeb3;

@@ -13,8 +13,7 @@ import { create } from 'ipfs-http-client';
 import getMetadata from "../../../utils/followListNft/upload";
 
 import dynamic from "next/dynamic";
-import { list } from "@chakra-ui/react";
-const GetSigner = dynamic(() => import("../../../components/GetSigner"), {
+const GetWeb3 = dynamic(() => import("../../../components/GetWeb3"), {
   ssr: false,
 });
 
@@ -79,7 +78,7 @@ export default function CreateList() {
 
     return (
     <>
-        <GetSigner/>
+        <GetWeb3/>
         <form onSubmit={handleAdd}>
             <label>Enter handle (eg. vitalik)</label>
             <input 

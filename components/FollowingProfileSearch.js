@@ -9,6 +9,7 @@ import doGetFollowing from "../utils/followingList/doGetFollowing"
 function FollowingProfileSearch() {
 
     const {
+        signerAddress,
         profileHandleInput, 
         setProfileHandleInput,
         setProfileAddress,
@@ -16,9 +17,6 @@ function FollowingProfileSearch() {
         followingPageInfo, 
         setFollowingPageInfo
      } = useContext(AppContext);
-
-    const router = useRouter();
-    const signerAddress = router.query.walletAddress;
 
     const [tempProfileHandleInput, setTempProfileHandleInput] = useState(null);
 
@@ -50,10 +48,12 @@ function FollowingProfileSearch() {
     }
 
     useEffect(() => {
-        setProfileAddress(signerAddress);
-        setFollowingList(null); 
-        handleInitialSearch();
-    }, []);
+        if(signerAddress) {
+            setProfileAddress(signerAddress);
+            setFollowingList(null); 
+            handleInitialSearch();
+        }
+    }, [signerAddress]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

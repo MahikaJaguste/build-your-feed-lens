@@ -1,4 +1,4 @@
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, getDocs, query, collection } from 'firebase/firestore';
 import db from '../index.js';
 
 export async function AddDocument_CustomID(address, protocolInfo) {
@@ -34,3 +34,28 @@ export async function GetADocument(address) {
     return [result, success];
 }
 
+export async function GetDocuments(address) {
+    const ref = collection(db, "ProtocolPreference");
+    const q = query(ref)
+
+    let docData = [], docKey = [], success = false;
+    let querySnapshot;
+    try {
+        querySnapshot = await getDocs(q);
+        
+        // console.log(querySnapshot)
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+            docData.push({...doc.data(), docId:doc.id});
+            docKey.push(doc.id);
+        });
+
+        success = true;
+    }
+    catch(err){
+        console.log(err);
+    }
+
+    return [docData, docKey, success];
+}

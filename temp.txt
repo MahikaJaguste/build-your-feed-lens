@@ -1,0 +1,49 @@
+flow of info
+
+ERC20_Preference DB
+key: 
+walletAddress
+data:
+{
+    preferences: [<list of ids>]
+}
+
+ERC20_Data.js
+[{
+        "id": 0,
+        "name": "Tether USD",
+        "symbol": "USDT",
+        "logo": "https://etherscan.io/token/images/tether_32.png",
+        "decimals": ,
+        "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+},...]
+
+NFT_Preference DB
+key:
+walletAddress
+data:
+{
+    preferences: [<list of ids>]
+}
+
+NFT_Data.js
+[{
+    "id": 0,
+    "name": "",
+    "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+}]
+
+
+get ERC20_Data.js
+get NFT_Data.js OR do input address and fetch nft
+update preference page to display this data and make additions to firestore
+update the display page to show this info properly
+update display page to show graph with fetch more
+
+getWeb3 everywhere
+do static site generation with revalidate
+change folder structure accordingly
+chakra ui
+
+optional - 
+get an NFT for preferences with updatable URI
