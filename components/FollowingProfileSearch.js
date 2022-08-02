@@ -6,28 +6,37 @@ import { useRouter } from 'next/router'
 import doGetProfile from "../utils/followingList/doGetProfile"
 import doGetFollowing from "../utils/followingList/doGetFollowing"
 
+import axios_getERC20 from "../utils/alchemy/axios_getERC20.js";
+
 function FollowingProfileSearch() {
 
     const {
         signerAddress,
+        tempProfileHandleInput,
+        setTempProfileHandleInput,
         profileHandleInput, 
         setProfileHandleInput,
         setProfileAddress,
         setFollowingList,
         followingPageInfo, 
-        setFollowingPageInfo
+        setFollowingPageInfo,
+        exploreProfileDetails,
+        setExploreProfileDetails,
+        preference,
+        setPreference
      } = useContext(AppContext);
-
-    const [tempProfileHandleInput, setTempProfileHandleInput] = useState(null);
 
     async function handleSearch() {
         if(profileHandleInput){
             const response1 = await doGetProfile(profileHandleInput)
             if(response1){
                 setProfileAddress(response1);
-                const [response2, pageInfo] = await doGetFollowing(response1, 10)
+                const [response2, pageInfo] = await doGetFollowing(response1, 1)
                 setFollowingList(response2);
                 setFollowingPageInfo(pageInfo);
+                if(response2.length){
+                    handleGetDetails(response2[0].profile.ownedBy)
+                }
             }
             else{
                 setProfileAddress(null);
@@ -41,9 +50,12 @@ function FollowingProfileSearch() {
 
     async function handleInitialSearch() {
         if(signerAddress){
-            const [response, pageInfo] = await doGetFollowing(signerAddress, 10)
+            const [response, pageInfo] = await doGetFollowing(signerAddress, 1)
             setFollowingList(response);
             setFollowingPageInfo(pageInfo);
+            if(response.length){
+                handleGetDetails(response[0].profile.ownedBy)
+            }
         }
     }
 
@@ -62,6 +74,16 @@ function FollowingProfileSearch() {
         setProfileHandleInput(tempProfileHandleInput);
     };
 
+    async function handleGetDetails(profileOwner) {
+        const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
+        if(preference){
+            console.log(user_result_ids, preference)
+            const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
+            console.log(output.length, preference.length, output.length/preference.length * 100);
+            console.log(user_result)
+        }
+    }
+
     return (
     <>
         <form onSubmit={handleSubmit}>
@@ -69,6 +91,7 @@ function FollowingProfileSearch() {
             <input 
                 type="text"  
                 id='profileHandleInputForm'
+                value={tempProfileHandleInput}
                 onChange={(e) => setTempProfileHandleInput(e.target.value)}/>
             <button type="submit">Search</button>
         </form>

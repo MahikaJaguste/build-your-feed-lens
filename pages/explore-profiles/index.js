@@ -27,43 +27,75 @@ export default function ProfileFollowing({
     docKey }) {
 
     const [isFetchingMore, setIsFetchingMore] = useState(false); 
-    const [selectedProfileId, setSelectedProfileId] = useState(undefined);
-    let preference = []
 
     const {
         signerAddress,
 
         profileHandleInput,
+        setTempProfileHandleInput,
+        setProfileHandleInput,
         profileAddress, 
+        setProfileAddress,
         followingList,
         setFollowingList,
         followingPageInfo,
         setFollowingPageInfo,
+        exploreProfileDetails,
+        setExploreProfileDetails,
+        preference,
+        setPreference,
     } = useContext(AppContext);
 
     const router = useRouter();
 
     async function handleFetchMore(prevFollowingList, prevFollwowingPageInfo) {
         setIsFetchingMore(true);
-        const [response, newPageInfo] = await doGetFollowing(profileAddress, 10, prevFollwowingPageInfo.next, followingList)
+        const [response, newPageInfo] = await doGetFollowing(profileAddress, 1, prevFollwowingPageInfo.next)
         setFollowingList(response);
         setFollowingPageInfo(newPageInfo);
         setIsFetchingMore(false);
+        if(response.length){
+            handleGetDetails(response[0].profile.ownedBy)
+        }
     }
 
-    async function handleGetDetails(profileOwner, profileId) {
-        setSelectedProfileId(profileId);
-        axios_getERC20(profileOwner);
+    async function handleGetDetails(profileOwner) {
+        const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
+        if(preference){
+            console.log(user_result_ids, preference)
+            const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
+            console.log(output.length, preference.length, output.length/preference.length * 100);
+            console.log(user_result)
+        }
     }
 
-    useEffect(() => {
+    function getPreference() {
         if(signerAddress) {
             const index = docKey.indexOf(signerAddress)
             if(index != -1) {
-                preference = docData[index]['preference']
+                setPreference(docData[index]['preference'])
             }
         }
+    }
+
+    useEffect(() => {
+        if(signerAddress && !preference.length){
+            getPreference()
+        }
     }, [signerAddress])
+
+    useEffect(() => {
+        if(!preference.length){
+            getPreference()
+        }
+    }, [])
+
+    function updateSearchHandle(currentHandle) {
+        setProfileAddress(null);
+        setFollowingList(null);
+        setTempProfileHandleInput(currentHandle)
+        setProfileHandleInput(currentHandle);
+    }
 
     return (
         <>
@@ -80,8 +112,6 @@ export default function ProfileFollowing({
             <br/>
             <FollowingProfileSearch/>
             <br/>
-
-            <DisplayGraph/>
             
             {followingList && followingList.length ?    
                 <>
@@ -91,8 +121,9 @@ export default function ProfileFollowing({
                         return (
                         <div key={profile.id}>
                             <div>{profile.handle}</div>
-                            <button onClick={() => {handleGetDetails(profile.ownedBy, profile.id)}}>Details</button>
+                            {/* <button onClick={() => {handleGetDetails(profile.ownedBy, profile.id)}}>Details</button> */}
                             <br/>
+                            <button onClick={() => updateSearchHandle(profile.handle)}>Search this profile</button>
                             <br/>
                         </div>
                         )

@@ -24,7 +24,8 @@ export default function Preferences({
     let preference = [];
 
     const { signerAddress,
-        setProfileHandleInput } = useContext(AppContext)
+        setProfileHandleInput,
+        setPreference } = useContext(AppContext)
 
     // get checkbox info
     let tempProtocolInfo = []
@@ -45,6 +46,7 @@ export default function Preferences({
         e.preventDefault();
         // console.log(protocolInfo);
         AddDocument_CustomID(signerAddress, protocolInfo);
+        setPreference(protocolInfo)
     }
 
     useEffect(() => {
