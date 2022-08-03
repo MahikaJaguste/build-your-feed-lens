@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { ChakraProvider } from '@chakra-ui/react'
 
 export const AppContext = createContext();
 
@@ -52,9 +53,12 @@ function MyApp({ Component, pageProps }) {
   }
 
   return (
-    <AppContext.Provider value={contextObj}>
-      <Component {...pageProps} />
-    </AppContext.Provider>
+    <ChakraProvider>
+      <AppContext.Provider value={contextObj}>
+        <Component {...pageProps} />
+      </AppContext.Provider>
+    </ChakraProvider>
+
   );
 }
 

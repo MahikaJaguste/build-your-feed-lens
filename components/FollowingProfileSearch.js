@@ -9,6 +9,15 @@ import doGetFollowing from "../utils/followingList/doGetFollowing"
 import axios_getERC20 from "../utils/alchemy/axios_getERC20.js";
 import axios_getERC721 from "../utils/alchemy/axios_getERC721.js";
 
+// style
+import { HStack, 
+    Input, 
+    Icon,
+    Text,
+    VStack,
+    Button } from "@chakra-ui/react";
+
+
 function FollowingProfileSearch() {
 
     const {
@@ -68,8 +77,8 @@ function FollowingProfileSearch() {
         }
     }, [signerAddress]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
+        // e.preventDefault();
         setProfileAddress(null);
         setFollowingList(null);
         setProfileHandleInput(tempProfileHandleInput);
@@ -84,7 +93,7 @@ function FollowingProfileSearch() {
         //     console.log(user_result)
         // }
         // const [user_result_ids, user_result] = 
-        await axios_getERC721(profileOwner);
+        // await axios_getERC721(profileOwner);
         // if(preference){
         //     console.log(user_result_ids, preference)
         //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
@@ -95,7 +104,7 @@ function FollowingProfileSearch() {
 
     return (
     <>
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}>
             <label>Enter handle (eg. vitalik.eth)</label>
             <input 
                 type="text"  
@@ -106,7 +115,35 @@ function FollowingProfileSearch() {
         </form>
         <p>{profileHandleInput ? profileHandleInput + " follows these profiles": 
             signerAddress ? "You follows these profiles" : null
-        } </p>
+        } </p> */}
+
+        <VStack>
+        <HStack spacing='0px'>
+            <Input
+                type="text"  
+                id='profileHandleInputForm'
+                value={tempProfileHandleInput}
+                onChange={(e) => setTempProfileHandleInput(e.target.value)}
+                size='md'
+                placeholder="Search by profile handle"
+                w="350px"
+            />
+
+            <Button
+                colorScheme='green'
+                type='submit'
+                size='md'
+                onClick={() => {handleSubmit()}}
+            >
+                Search
+            </Button>
+        </HStack>
+
+        {profileHandleInput ? <Text fontSize='sm'>
+            {profileHandleInput} follows ... 
+        </Text> : null }
+        </VStack>
+
     </>
     );
 }

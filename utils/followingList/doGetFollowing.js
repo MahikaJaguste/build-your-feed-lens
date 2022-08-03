@@ -7,8 +7,8 @@ export default async function doGetFollowing(profileAddress, limit, cursor=null,
         const response = await following(profileAddress, limit, cursor);
         // console.log('repsosne list', response.data.following);
         followingList.push(...response.data.following.items);
-        // console.log('following list', followingList);
         if(response.data.following && response.data.following.items.length){
+            console.log(followingList)
             console.log("Following list returned");
             return [
                 followingList, 
