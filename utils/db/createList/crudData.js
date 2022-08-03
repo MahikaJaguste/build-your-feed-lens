@@ -70,3 +70,29 @@ export async function GetADocument(docId) {
     }
     return result
 }
+
+export async function GetDocuments(address) {
+    const ref = collection(db, "LensList");
+    const q = query(ref)
+
+    let docData = [], docKey = [], success = false;
+    let querySnapshot;
+    try {
+        querySnapshot = await getDocs(q);
+        
+        // console.log(querySnapshot)
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+            docData.push({...doc.data(), docId:doc.id});
+            docKey.push(doc.id);
+        });
+
+        success = true;
+    }
+    catch(err){
+        console.log(err);
+    }
+
+    return [docData, docKey, success];
+}

@@ -22,8 +22,7 @@ const LandingPage = () => {
 
                 <button onClick={() => {
                     router.push({
-                        pathname: '/explore-posts/[walletAddress]',
-                        query: { walletAddress: signerAddress },
+                        pathname: '/explore-posts',
                     });
                 }}>
                     Explore Posts

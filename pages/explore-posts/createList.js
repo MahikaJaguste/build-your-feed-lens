@@ -1,24 +1,24 @@
 import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
-import {AppContext} from '../../_app';
+import {AppContext} from '../_app';
 
 // lens
-import doGetProfile from "../../../utils/createList/doGetProfile";
+import doGetProfile from "../../utils/createList/doGetProfile";
 
 // db
-import { AddDocument_AutoID } from "../../../utils/db/createList/crudData";
+import { AddDocument_AutoID } from "../../utils/db/createList/crudData";
 
 // ipfs
 import { create } from 'ipfs-http-client';
-import getMetadata from "../../../utils/followListNft/upload";
+import getMetadata from "../../utils/followListNft/upload";
 
 import dynamic from "next/dynamic";
-const GetWeb3 = dynamic(() => import("../../../components/GetWeb3"), {
+const GetWeb3 = dynamic(() => import("../../components/GetWeb3"), {
   ssr: false,
 });
 
 // abi
-import LIST_NFT_ABI from '../../../artifacts/contracts/ListNFT.sol/ListNFT.json';
+import LIST_NFT_ABI from '../../artifacts/contracts/ListNFT.sol/ListNFT.json';
 import { ethers } from 'ethers';
 
 const client = create("https://ipfs.infura.io:5001/api/v0");
@@ -26,9 +26,9 @@ const client = create("https://ipfs.infura.io:5001/api/v0");
 export default function CreateList() {
 
     const router = useRouter();
-    const signerAddress = router.query.walletAddress;
+    
 
-    const { signer, provider } = useContext(AppContext);
+    const { signer, signerAddress, provider } = useContext(AppContext);
     let listNFTContract;
 
     const [tempHandleInput, setTempHandleInput] = useState(undefined);
@@ -78,7 +78,7 @@ export default function CreateList() {
 
     return (
     <>
-        <GetWeb3/>
+        {signerAddress? null : <GetWeb3/>}
         <form onSubmit={handleAdd}>
             <label>Enter handle (eg. vitalik)</label>
             <input 
