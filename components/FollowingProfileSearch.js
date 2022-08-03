@@ -33,7 +33,18 @@ function FollowingProfileSearch() {
         exploreProfileDetails,
         setExploreProfileDetails,
         preference,
-        setPreference
+        setPreference,
+        erc721_preference,
+        erc721_setPreference,
+        
+        user_result_ids, 
+        setUser_result_ids,
+        user_result,
+        setUser_result,
+        erc721_user_result_ids, 
+        setErc721_user_result_ids, 
+        erc721_user_result,
+        setErc721_user_result
      } = useContext(AppContext);
 
     async function handleSearch() {
@@ -85,21 +96,15 @@ function FollowingProfileSearch() {
     };
 
     async function handleGetDetails(profileOwner) {
-        // const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
-        // if(preference){
-        //     console.log(user_result_ids, preference)
-        //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
-        //     console.log(output.length, preference.length, output.length/preference.length * 100);
-        //     console.log(user_result)
-        // }
-        // const [user_result_ids, user_result] = 
-        // await axios_getERC721(profileOwner);
-        // if(preference){
-        //     console.log(user_result_ids, preference)
-        //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
-        //     console.log(output.length, preference.length, output.length/preference.length * 100);
-        //     console.log(user_result)
-        // }
+        const [temp_user_result_ids, temp_user_result] = await axios_getERC20(profileOwner);
+        setUser_result_ids(temp_user_result_ids)
+        setUser_result(temp_user_result)
+        console.log(temp_user_result.length)
+
+        const [erc721_temp_user_result_ids, erc721_temp_user_result] =  await axios_getERC721(profileOwner);
+        setErc721_user_result_ids(erc721_temp_user_result_ids)
+        setErc721_user_result(erc721_temp_user_result)
+        console.log(erc721_temp_user_result.length)
     }
 
     return (
@@ -125,7 +130,7 @@ function FollowingProfileSearch() {
                 value={tempProfileHandleInput}
                 onChange={(e) => setTempProfileHandleInput(e.target.value)}
                 size='md'
-                placeholder="Search by profile handle"
+                placeholder="Search following by profile handle"
                 w="350px"
             />
 

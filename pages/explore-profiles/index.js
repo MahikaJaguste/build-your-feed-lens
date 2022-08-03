@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../_app";
 import { useRouter } from 'next/router';
+import  Link  from "next/link";
 
 import FollowingProfileSearch from "../../components/FollowingProfileSearch.js"
 
@@ -10,6 +11,8 @@ import axios_getERC721 from "../../utils/alchemy/axios_getERC721";
 
 import erc20_metadata from "../../utils/preferences/erc20_metadata.js";
 import erc721_metadata from "../../utils/preferences/erc721_metadata.js";
+import erc20_contractAddress from "../../utils/preferences/erc20_contractAddress";
+import erc721_contractAddress from "../../utils/preferences/erc721_contractAddress";
 
 // components
 import dynamic from "next/dynamic";
@@ -29,6 +32,8 @@ import { Flex,
     VStack,
     Text,
     Icon,
+    StackDivider,
+    Box,
 
 } from '@chakra-ui/react';
 
@@ -61,12 +66,26 @@ export default function ProfileFollowing({
         preference,
         setPreference,
         erc721_preference,
-        erc721_setPreference
+        erc721_setPreference,
+        
+        user_result_ids, 
+        setUser_result_ids,
+        user_result,
+        setUser_result,
+        erc721_user_result_ids, 
+        setErc721_user_result_ids, 
+        erc721_user_result,
+        setErc721_user_result
+
     } = useContext(AppContext);
 
     const router = useRouter();
 
     async function handleFetchMore(prevFollowingList, prevFollwowingPageInfo) {
+        setUser_result(null)
+        setErc721_user_result(null)
+        setUser_result_ids(null)
+        setUser_result_ids(null)
         setIsFetchingMore(true);
         const [response, newPageInfo] = await doGetFollowing(profileAddress, 1, prevFollwowingPageInfo.next)
         setFollowingList(response);
@@ -78,6 +97,10 @@ export default function ProfileFollowing({
     }
 
     async function handleFetchLess(prevFollowingList, prevFollowingPageInfo) {
+        setUser_result(null)
+        setErc721_user_result(null)
+        setUser_result_ids(null)
+        setUser_result_ids(null)
         setIsFetchingMore(true);
         const prevCursorNum = parseInt(prevFollowingPageInfo.prev.slice(10, prevFollowingPageInfo.prev.length-1)) - 1
         const prevCursor = `{\"offset\":${prevCursorNum}}`
@@ -92,15 +115,23 @@ export default function ProfileFollowing({
     }
 
     async function handleGetDetails(profileOwner) {
-        // const [user_result_ids, user_result] = await axios_getERC20(profileOwner);
+        const [temp_user_result_ids, temp_user_result] = await axios_getERC20(profileOwner);
+        setUser_result_ids(temp_user_result_ids)
+        setUser_result(temp_user_result)
+        console.log(temp_user_result.length)
+
+        const [erc721_temp_user_result_ids, erc721_temp_user_result] =  await axios_getERC721(profileOwner);
+        setErc721_user_result_ids(erc721_temp_user_result_ids)
+        setErc721_user_result(erc721_temp_user_result)
+        console.log(erc721_temp_user_result.length)
+
         // if(preference){
         //     console.log(user_result_ids, preference)
         //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
         //     console.log(output.length, preference.length, output.length/preference.length * 100);
         //     console.log(user_result)
         // }
-        // const [erc721_user_result_ids, erc721_user_result] = 
-        // await axios_getERC721(profileOwner);
+        // const [erc721_user_result_ids, erc721_user_result] = await axios_getERC721(profileOwner);
         // if(erc721_preference){
         //     console.log(erc721_user_result_ids, erc721_preference)
         //     const erc721_output = erc721_user_result_ids.filter((obj) => erc721_preference.indexOf(obj) !== -1);
@@ -150,12 +181,17 @@ export default function ProfileFollowing({
         setFollowingList(null);
         setTempProfileHandleInput(currentHandle)
         setProfileHandleInput(currentHandle);
+        setUser_result(null)
+        setErc721_user_result(null)
+        setUser_result_ids(null)
+        setErc721_user_result_ids(null)
     }
 
     return (
         <>
             {signerAddress ? null : <GetWeb3/>}
 
+            {/* { navbar area } */}
             <Flex
                 px="60px"
                 py='20px'
@@ -192,7 +228,7 @@ export default function ProfileFollowing({
 
             </Flex>
 
-            
+            {/* { display profile and arrows area } */}
             <HStack
                 justifyContent='space-between'
                 marginTop='10px'
@@ -215,6 +251,7 @@ export default function ProfileFollowing({
                     <p>Fetching more profiles</p>
             : null } 
 
+            {/* { display profile } */}
             <HStack 
                 justifyContent='center'
             >
@@ -310,6 +347,133 @@ export default function ProfileFollowing({
  
                 
             </HStack>
+
+            
+            {/* { display matching percent and data } */}
+            <Flex
+                justifyContent='center' 
+                mt='50px'
+            >
+            <VStack>
+                <Text>Match percentage</Text>
+            
+
+                <HStack
+                spacing={20}
+                justifyItems='space-between'
+                mt='50px'
+                alignItems='flex-start'
+                >
+                    <Flex
+                        w='600px'
+                        minH='300px'
+                        borderRadius='50px'
+                        justifyContent='center'
+                        pt='30px'
+                    >
+                        <VStack
+                            divider={<StackDivider borderColor='gray.200' />}
+                            spacing={2}
+                            align='stretch'
+                        >
+
+                        <Text fontSize='xl' textAlign='center'>ERC20 Match</Text>
+
+                        {user_result ? 
+                            user_result.map((obj, index) => {
+                                const i = erc20_contractAddress.indexOf(obj.contractAddress)
+                                if(i != -1){
+                                    return (
+                                        
+                                            <Box h='40px' 
+                                                borderRadius='20'
+                                                boxShadow='0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+                                                w='500px'
+                                                px='20px'
+                                            >
+                                                <HStack
+                                                alignItems='center'
+                                                spacing={8}
+                                                justifyContent='space-between'
+                                                >
+                                                    <Image boxSize='30px'
+                                                    objectFit='cover'
+                                                    mt='5px'
+                                                    src={erc20_metadata[i].logo}
+                                                    fallbackSrc='https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=webp&v=1530129081'
+                                                    />
+                                                    <Text>{erc20_metadata[i].name}</Text>
+                                                    <Text>{obj.tokenBalance} {erc20_metadata[i].symbol}</Text>
+                                                </HStack>
+                                            </Box>
+                                    )
+                                }
+                            })
+                            :
+                            null
+                            }
+
+                        </VStack>
+                    </Flex>
+
+                    <Flex 
+                        w='600px'
+                        minH='300px'
+                        borderRadius='50px'
+                        justifyContent='center'
+                        pt='30px'
+                    >
+                        <VStack
+                            divider={<StackDivider borderColor='gray.200' />}
+                            spacing={2}
+                            align='stretch'
+                        >
+
+                        <Text fontSize='xl' textAlign='center'>ERC721 Match</Text>
+
+                        {erc721_user_result ?  
+                            erc721_user_result.map((obj, index) => {
+                                if(!obj.name || !obj.name.length) {
+                                    return <></>
+                                }
+                                return (
+                                    
+                                        <Box h='40px' 
+                                            borderRadius='20'
+                                            boxShadow='0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+                                            w='500px'
+                                            px='20px'
+                                        >
+                                            <HStack
+                                            alignItems='center'
+                                            spacing={8}
+                                            justifyContent='space-between'
+                                            >
+                                                <Image boxSize='30px'
+                                                objectFit='cover'
+                                                mt='5px'
+                                                src={obj.tokenURI}
+                                                fallbackSrc='https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=webp&v=1530129081'
+                                                />
+                                                <Text>{obj.name}</Text>
+                                                <a target="_blank" href={obj.viewURL} rel="noopener noreferrer">
+                                                <Text  as='u'>View NFT</Text>
+                                                </a>
+                                            </HStack>
+                                        </Box>
+                                )
+                            })
+                            :
+                            null
+                            }
+
+                        </VStack>
+                    </Flex>
+                </HStack>
+
+            </VStack>
+            </Flex>
+
         </>             
     );
 }

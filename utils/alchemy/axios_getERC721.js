@@ -13,6 +13,8 @@ async function axios_getERC721 (address) {
         url: url,
     };
 
+    let user_result_ids = [], user_result = [];
+
     try {
         const response = await axios(config)
         const nfts = response['data'];
@@ -21,18 +23,25 @@ async function axios_getERC721 (address) {
         const numNfts = nfts['totalCount'];
         const nftList = nfts['ownedNfts'];
 
-        console.log(`Total NFTs owned by ${address}: ${numNfts} \n`);
+        // console.log(`Total NFTs owned by ${address}: ${numNfts} \n`);
 
-        let i = 1;
-
+        // console.log(nftList)
         for (let nft of nftList) {
-            console.log(`${i}. ${nft['metadata']['name']}`)
-            i++;
+            user_result_ids.push(nft.contract.address)
+            user_result.push({
+                contractAddress: nft.contract.address,
+                tokenId: nft.id.tokenId,
+                name: nft.metadata.name,
+                tokenURI: nft.media.gateway ? nft.media.gateway : nft.metadata.image ? nft.metadata.image : null,
+                viewURL: nft.metadata.tokenUri ? nft.metadata.tokenUri : nft.media.gateway ? nft.media.gateway : nft.metadata.image ? nft.metadata.image :'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=webp&v=1530129081'
+            })
         }
     }
     catch(error) {
         console.log('error', error)
     }
+
+    return [user_result_ids, user_result]
 }
 
 export default axios_getERC721;

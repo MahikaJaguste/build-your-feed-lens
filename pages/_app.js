@@ -20,6 +20,11 @@ function MyApp({ Component, pageProps }) {
   const [exploreProfileDetails, setExploreProfileDetails] = useState(undefined)
   const [preference, setPreference] = useLocalStorage("erc20_preference_list", [])
   const [erc721_preference, erc721_setPreference] = useLocalStorage("erc721_preference_list", [])
+
+  const [user_result_ids, setUser_result_ids] = useState(null)
+  const [user_result, setUser_result] = useState(null)
+  const [erc721_user_result_ids, setErc721_user_result_ids] = useState(null)
+  const [erc721_user_result, setErc721_user_result] = useState(null)
     
   const contextObj = {
     provider,
@@ -49,7 +54,16 @@ function MyApp({ Component, pageProps }) {
     preference,
     setPreference,
     erc721_preference,
-    erc721_setPreference
+    erc721_setPreference,
+
+    user_result_ids, 
+    setUser_result_ids,
+    user_result,
+    setUser_result,
+    erc721_user_result_ids, 
+    setErc721_user_result_ids, 
+    erc721_user_result,
+    setErc721_user_result
   }
 
   return (

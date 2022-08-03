@@ -56,7 +56,7 @@ async function axios_getERC20 (address) {
 
             if(index != -1) {
                 let balance = token['tokenBalance']/Math.pow(10, metadata['decimals']);
-                balance = balance.toFixed(18);
+                balance = balance.toFixed(2);
                 // Print name, balance, and symbol of token
                 // console.log(`${metadata['name']}: ${balance}  ${metadata['symbol']}`)
                 user_result_ids.push(metadata['id'].toString())
