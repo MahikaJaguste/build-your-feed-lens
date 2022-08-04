@@ -200,22 +200,26 @@ export default function ProfileFollowing({
                 justifyContent="space-between"
                 //bg='lightgreen'
             >
-                <Heading 
-                    mr='5px'
-                    fontSize={30}
-                    letterSpacing='1.5px'
-                >
-                    Build Your Feed
-                </Heading>
+                
+                    <Heading 
+                        mr='5px'
+                        fontSize={20}
+                        letterSpacing='1.5px'
+                    >
+                        <Link href='/'>
+                        Build-Your-Feed
+                        </Link>
+                    </Heading>
                 <Flex
                     align-items="center"
                     justifyContent="center" 
-                    mr='110px'
+                    // mr='30px'
                 >
                     <FollowingProfileSearch/>
                 </Flex>
                 <Button
-                    colorScheme='green'
+                    bg="darkgreen"
+                    textColor="white"
                     size='md'
                     onClick={() => {
                         router.push({
@@ -289,7 +293,8 @@ export default function ProfileFollowing({
                                 </HStack>
                                 <Text fontSize='md' px='10px' textAlign='center' pt='10px' pb='10px'>{profile.bio}</Text>
                                 <Button
-                                colorScheme='green'
+                                bg="darkgreen"
+                                textColor="white"
                                 size='md'
                                 >
                                     Follow 
@@ -434,7 +439,7 @@ export default function ProfileFollowing({
                         {erc721_user_result ?  
                             erc721_user_result.map((obj, index) => {
                                 if(!obj.name || !obj.name.length) {
-                                    return <></>
+                                    return null
                                 }
                                 return (
                                     

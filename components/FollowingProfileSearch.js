@@ -135,7 +135,8 @@ function FollowingProfileSearch() {
             />
 
             <Button
-                colorScheme='green'
+                bg="darkgreen"
+                textColor="white"
                 type='submit'
                 size='md'
                 onClick={() => {handleSubmit()}}
