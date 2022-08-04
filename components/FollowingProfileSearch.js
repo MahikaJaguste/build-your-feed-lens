@@ -147,7 +147,9 @@ function FollowingProfileSearch() {
 
         {profileHandleInput ? <Text fontSize='sm'>
             {profileHandleInput} follows ... 
-        </Text> : null }
+        </Text> : <Text fontSize='sm'>
+            You follow ... 
+        </Text> }
         </VStack>
 
     </>

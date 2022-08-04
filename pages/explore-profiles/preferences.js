@@ -14,6 +14,24 @@ const GetWeb3 = dynamic(() => import("../../components/GetWeb3"), {
   ssr: false,
 });
 
+import {
+    Box,
+    Heading,
+    Text,
+    Link,
+    Flex,
+    Icon,
+    AspectRatio,
+    Img,
+    HStack,
+    Stack,
+    Button,
+    List,
+    ListIcon,
+    ListItem,
+  
+  } from "@chakra-ui/react";
+
 export default function Preferences({
     docData,
     docKey,
@@ -23,6 +41,8 @@ export default function Preferences({
 
     const [protocolInfo, setProtocolInfo] = useState([]);
     const [erc721_protocolInfo, erc721_setProtocolInfo] = useState([]);
+
+    const router = useRouter();
 
     const { signerAddress,
         setTempProfileHandleInput,
@@ -82,7 +102,7 @@ export default function Preferences({
                 }
             }
             if(erc721_docKey && erc721_docKey.length){
-                index = erc721_docKey.indexOf(signerAddress)
+                let index = erc721_docKey.indexOf(signerAddress)
                 if(index != -1) {
                     erc721_setProtocolInfo(erc721_docData[index]['preference'])
                 }
@@ -98,6 +118,222 @@ export default function Preferences({
     return (
         <>
         {signerAddress ? null : <GetWeb3/>}
+
+        <Flex
+      px="60px"
+      py='20px'
+      width="full"
+      justifyContent="space-between"
+      alignItems='flex-start'
+      // bg='grey'
+    >
+      <Link href='/'>
+          <Img src='https://i.ibb.co/g7z0ZW0/logo.png' boxSize='75px'/>
+      </Link>
+    
+      <Heading 
+          fontSize={50}
+          letterSpacing='1.5px'
+          
+          >
+          Your Preferences
+      </Heading>
+      
+      <Link href='/explore-profiles'>
+          <Button
+            bg="darkgreen"
+            textColor="white"
+            size='md'
+            onClick={() => {
+                router.push({
+                    pathname: `/explore-profiles`,
+                });
+            }}
+        >
+            Back to Explore Profiles
+        </Button>
+        </Link>
+
+        </Flex>
+
+        <Flex
+      align="center"
+      justify={{ base: "center", md: "space-around", xl: "space-around" }}
+      direction={{ base: "column-reverse", md: "row" }}
+      wrap="no-wrap"
+      minH="63vh"
+      px={8}
+      bg='grey'
+    >
+
+    <Stack
+        spacing={6}
+        minW={{ base: "100%", md: "40%" }}
+        minH = {{ base: "100%", md: "40%" }}
+        align={["center", "center", "flex-start", "flex-start"]}
+        ml={10}
+        justify='center'
+        alignItems='center'
+        pt={6}
+        pb={6}
+        bg='white'
+        borderRadius='20'
+        boxShadow='0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+      >
+      
+      <Heading
+          as="h3"
+          size="md"
+          color="primary.800"
+          opacity="0.8"
+          fontWeight="bold"
+          lineHeight={1.5}
+          textAlign={["center", "center", "center", "center"]}
+        >
+          ERC20 Tokens
+      </Heading>
+
+      <List spacing={10} justifyContent='center'>
+        <ListItem>
+          <HStack>
+            <Text
+            fontSize="lg"
+            textAlign="center"
+            color="primary"
+          >
+            Which tokens and NFTs do you find interesting? <br/>Set your preferences accordingly.
+          </Text>
+          </HStack>
+        </ListItem>
+        <ListItem>
+        <HStack>
+            <Text
+            fontSize="lg"
+            textAlign="center"
+            color="primary"
+          >
+            Browse profiles being followed by someone.<br/>
+          See what assets they own.
+          </Text>
+          </HStack>
+          
+        </ListItem>
+        <ListItem>
+        <HStack>
+            <Text
+            fontSize="lg"
+            textAlign="center"
+            color="primary"
+          >
+            Like how they think ? Go follow them !
+          </Text>
+          </HStack>
+        </ListItem>
+      </List>
+        
+        {signerAddress ? 
+        <Link href='/explore-profiles' target='_blank'>
+          <Button
+            bg="darkgreen"
+            textColor="white"
+            size='md'
+            onClick={() => {
+                router.push({
+                    pathname: `/explore-profiles`,
+                });
+            }}
+        >
+            Explore Profiles
+        </Button>
+        </Link> : null }
+        
+      </Stack>
+
+      <Stack
+        spacing={6}
+        minW={{ base: "100%", md: "40%" }}
+        minH = {{ base: "100%", md: "40%" }}
+        align={["center", "center", "flex-start", "flex-start"]}
+        ml={10}
+        justify='center'
+        alignItems='center'
+        pt={6}
+        pb={6}
+        bg='white'
+        borderRadius='20'
+        boxShadow='0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+      >
+      
+      <Heading
+          as="h3"
+          size="md"
+          color="primary.800"
+          opacity="0.8"
+          fontWeight="bold"
+          lineHeight={1.5}
+          textAlign={["center", "center", "center", "center"]}
+        >
+          ERC721 Tokens (NFTs)
+      </Heading>
+
+      <List spacing={10} justifyContent='center'>
+        <ListItem>
+          <HStack>
+            <Text
+            fontSize="lg"
+            textAlign="center"
+            color="primary"
+          >
+            Have a favorite group of content creators ? <br/>
+            Create your Lens Lists accordingly.
+          </Text>
+          </HStack>
+        </ListItem>
+        <ListItem>
+        <HStack>
+            <Text
+            fontSize="lg"
+            textAlign="center"
+            color="primary"
+          >
+            Create separate feeds on multiple themes - <br/>game updates, fashion tips, etc.d
+          </Text>
+          </HStack>
+          
+        </ListItem>
+        <ListItem>
+        <HStack>
+            <Text
+            fontSize="lg"
+            textAlign="center"
+            color="primary"
+          >
+            Own your curated list by minting a ListNFT !
+          </Text>
+          </HStack>
+        </ListItem>
+      </List>
+        
+      {signerAddress ? 
+        <Link href='/explore-profiles' target='_blank'>
+          <Button
+            bg="darkgreen"
+            textColor="white"
+            size='md'
+            onClick={() => {
+                router.push({
+                    pathname: `/explore-posts`,
+                });
+            }}
+        >
+            Explore Posts
+        </Button>
+        </Link> : null }
+        
+      </Stack>
+
+    </Flex>
+
         {signerAddress ?  
         <form onSubmit={handleSubmit}>
         {

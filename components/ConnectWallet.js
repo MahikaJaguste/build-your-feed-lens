@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../pages/_app";
 import { useWeb3Modal } from "../hooks/web3";
 
+import { Button } from '@chakra-ui/react'
+
 const truncateAddress = (address) => {
   return address.slice(0, 6) + "..." + address.slice(-4);
 };
@@ -79,12 +81,14 @@ const ConnectWallet = () => {
     }, [networkId]);
 
     return (
-        <button
-        onClick={modalSignerAddress ? handleClickAddress : handleClickConnect}>
-        <div>
+          <Button
+          bg="darkgreen"
+          textColor="white"
+          size='md'
+          onClick={modalSignerAddress ? handleClickAddress : handleClickConnect}
+      >
             {modalSignerAddress ? truncateAddress(modalSignerAddress) : "Connect Wallet"}
-        </div>
-        </button>
+      </Button>
     );
 }
 

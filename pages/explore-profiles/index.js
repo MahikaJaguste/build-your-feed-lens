@@ -28,12 +28,14 @@ import { Flex,
     Heading,
     HStack,
     Button,
+    Img,
     Image,
     VStack,
     Text,
     Icon,
     StackDivider,
     Box,
+    Spinner,
 
 } from '@chakra-ui/react';
 
@@ -47,7 +49,8 @@ export default function ProfileFollowing({
     erc721_docData,
     erc721_docKey }) {
 
-    const [isFetchingMore, setIsFetchingMore] = useState(false); 
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
+    const [isFetchingLess, setIsFetchingLess] = useState(false); 
 
     const {
         signerAddress,
@@ -101,14 +104,14 @@ export default function ProfileFollowing({
         setErc721_user_result(null)
         setUser_result_ids(null)
         setUser_result_ids(null)
-        setIsFetchingMore(true);
+        setIsFetchingLess(true);
         const prevCursorNum = parseInt(prevFollowingPageInfo.prev.slice(10, prevFollowingPageInfo.prev.length-1)) - 1
         const prevCursor = `{\"offset\":${prevCursorNum}}`
         console.log(prevCursor)
         const [response, newPageInfo] = await doGetFollowing(profileAddress, 1, prevCursor)
         setFollowingList(response);
         setFollowingPageInfo(newPageInfo);
-        setIsFetchingMore(false);
+        setIsFetchingLess(false);
         if(response.length){
             handleGetDetails(response[0].profile.ownedBy)
         }
@@ -201,19 +204,14 @@ export default function ProfileFollowing({
                 //bg='lightgreen'
             >
                 
-                    <Heading 
-                        mr='5px'
-                        fontSize={20}
-                        letterSpacing='1.5px'
-                    >
-                        <Link href='/'>
-                        Build-Your-Feed
-                        </Link>
-                    </Heading>
+                <Link href='/'>
+                    <Img src='https://i.ibb.co/g7z0ZW0/logo.png' boxSize='75px'/>
+                </Link>
+
                 <Flex
                     align-items="center"
                     justifyContent="center" 
-                    // mr='30px'
+                    pl='80px'
                 >
                     <FollowingProfileSearch/>
                 </Flex>
@@ -244,7 +242,7 @@ export default function ProfileFollowing({
                     <Button bg='transparent' color='white' mt='75px'>
                     <Icon as={BsArrowLeftCircle} w={10} h={10}/> 
                     </Button> :
-                    !isFetchingMore ?
+                    !isFetchingLess ?
                         // <button onClick={()=> handleFetchMore(followingList, followingPageInfo)}>Get more profiles</button>
                         <Button bg='white' onClick={()=> handleFetchLess(followingList, followingPageInfo)}
                         mt='75px'
@@ -252,7 +250,15 @@ export default function ProfileFollowing({
                         <Icon as={BsArrowLeftCircle} w={10} h={10}/> 
                         </Button>
                     :
-                    <p>Fetching more profiles</p>
+                    <Spinner
+                        thickness='4px'
+                        speed='0.65s'
+                        emptyColor='gray.200'
+                        color='darkgreen'
+                        size='xl'
+                        mt='75px'
+                        w={10} h={10}
+                    />
             : null } 
 
             {/* { display profile } */}
@@ -347,7 +353,15 @@ export default function ProfileFollowing({
                         <Icon as={BsArrowRightCircle} w={10} h={10}/>
                         </Button>
                     :
-                    <p>Fetching more profiles</p>
+                    <Spinner
+                        thickness='4px'
+                        speed='0.65s'
+                        emptyColor='gray.200'
+                        color='darkgreen'
+                        size='xl'
+                        mt='75px'
+                        w={10} h={10}
+                    />
             : null }
  
                 
@@ -355,7 +369,7 @@ export default function ProfileFollowing({
 
             
             {/* { display matching percent and data } */}
-            <Flex
+            {followingList && followingList.length ? <Flex
                 justifyContent='center' 
                 mt='50px'
             >
@@ -477,7 +491,7 @@ export default function ProfileFollowing({
                 </HStack>
 
             </VStack>
-            </Flex>
+            </Flex> : null }
 
         </>             
     );
