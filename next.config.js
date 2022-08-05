@@ -2,7 +2,7 @@
 
 const webpack = require('webpack')
 const { parsed: myEnv } = require('dotenv').config({
-  //path:'D:/Files/Blockchain/Polygon-Fellowship/Build-Your-Feed/build-your-feed-lens/.env'
+  path:'D:/Files/Blockchain/Polygon-Fellowship/Build-Your-Feed/build-your-feed-lens/.env'
 })
 
 const nextConfig = {
