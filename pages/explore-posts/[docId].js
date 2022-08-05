@@ -197,9 +197,7 @@ export default function CreateList({
     )
 }
 
-
-
-export async function getStaticProps({params}) {
+export async function getServerSideProps({params}){
     const response = await GetADocument(params.docId)
     let creatorList = [];
     let listTitle = 'No such list exists';
@@ -212,17 +210,6 @@ export async function getStaticProps({params}) {
     return { props: { 
         creatorList,
         listTitle
-    },
-    revalidate: 10,
- }
-}
-
-export async function getStaticPaths() {
-    const [lists, lists_keys, success] = await GetDocuments();
-    const paths = lists_keys.map((elem ) => ({params : {docId : elem}}))
-    return {
-        // paths: [{params: {docId:'051PtCWYr5xS6OhRLBlH'}}],
-        paths,
-        fallback: false
+    }
     }
 }
