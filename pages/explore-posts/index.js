@@ -94,6 +94,7 @@ export default function ListFollowing({
                     pb='30px'
                     _focus={{ boxShadow: "none !important" }}
                     align-content='space-between'
+                    key={index}
                     >      
                 
                         <VStack
@@ -137,6 +138,7 @@ export default function ListFollowing({
                     pb='30px'
                     _focus={{ boxShadow: "none !important" }}
                     align-content='space-between'
+                    key={index}
                     >      
                 
                         <VStack

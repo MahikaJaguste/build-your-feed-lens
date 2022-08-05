@@ -142,6 +142,7 @@ export default function CreateList({
                     w='1000px'
                     px='20px'
                     py='5px'
+                    key={index}
                     >
                     <VStack
                     alignItems='flex-start'

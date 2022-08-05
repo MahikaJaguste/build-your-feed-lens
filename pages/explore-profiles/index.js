@@ -467,6 +467,7 @@ export default function ProfileFollowing({
                                                 w='500px'
                                                 px='20px'
                                                 bg='white'
+                                                key={index}
                                             >
                                                 <HStack
                                                 alignItems='center'
@@ -532,6 +533,7 @@ export default function ProfileFollowing({
                                             w='500px'
                                             px='20px'
                                             bg='white'
+                                            key={index}
                                         >
                                             <HStack
                                             alignItems='center'
