@@ -68,7 +68,7 @@ export default function Home() {
           pt='30px'
           pb='30px'
           >
-          Find Your People
+          Find Your Feed
       </Heading>
       
       <Button
@@ -145,11 +145,11 @@ export default function Home() {
             bg="darkgreen"
             textColor="white"
             size='md'
-            onClick={() => {
-                router.push({
-                    pathname: `/explore-profiles`,
-                });
-            }}
+            // onClick={() => {
+            //     router.push({
+            //         pathname: `/explore-profiles`,
+            //     });
+            // }}
         >
             Explore
         </Button>
@@ -169,7 +169,8 @@ export default function Home() {
 
       <Box w={{ base: "100%", sm: "60%", md: "50%" }} mb={{ base: 12, md: 0 }} mr={10} 
       >
-        <Img src='https://i.ibb.co/DfVhxsp/bgImage.gif' size="100%" rounded="1rem"  />
+        {/* <Img src='https://i.ibb.co/DfVhxsp/bgImage.gif' size="100%" rounded="1rem"  /> */}
+        <Img src='https://i.ibb.co/sRDNJpM/clouds.png' size="100%" rounded="1rem"  />
       </Box>
     
     </Flex>
@@ -258,11 +259,11 @@ export default function Home() {
             bg="darkgreen"
             textColor="white"
             size='md'
-            onClick={() => {
-                router.push({
-                    pathname: `/explore-profiles`,
-                });
-            }}
+            // onClick={() => {
+            //     router.push({
+            //         pathname: `/explore-profiles`,
+            //     });
+            // }}
         >
             Explore Profiles
         </Button>
@@ -319,7 +320,7 @@ export default function Home() {
             textAlign="center"
             color="primary"
           >
-            Create separate feeds on multiple themes - <br/>game updates, fashion tips, etc.d
+            Create separate feeds on multiple themes - <br/>game updates, fashion tips, etc.
           </Text>
           </HStack>
           
@@ -339,16 +340,16 @@ export default function Home() {
       </List>
         
       {signerAddress ? 
-        <Link href='/explore-profiles' target='_blank'>
+        <Link href='/explore-posts' target='_blank'>
           <Button
             bg="darkgreen"
             textColor="white"
             size='md'
-            onClick={() => {
-                router.push({
-                    pathname: `/explore-posts`,
-                });
-            }}
+            // onClick={() => {
+            //     router.push({
+            //         pathname: `/explore-posts`,
+            //     });
+            // }}
         >
             Explore Posts
         </Button>

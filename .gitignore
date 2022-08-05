@@ -35,6 +35,5 @@ firebaseConfig.js
 serviceAccountKey.json
 covalentConfig.js
 
-artifacts
 cache
 .env

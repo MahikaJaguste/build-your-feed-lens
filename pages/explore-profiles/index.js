@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../_app";
 import { useRouter } from 'next/router';
-import  Link  from "next/link";
 
 import FollowingProfileSearch from "../../components/FollowingProfileSearch.js"
 
@@ -36,6 +35,9 @@ import { Flex,
     StackDivider,
     Box,
     Spinner,
+    Link,
+    Progress,
+    Stack,
 
 } from '@chakra-ui/react';
 
@@ -78,7 +80,10 @@ export default function ProfileFollowing({
         erc721_user_result_ids, 
         setErc721_user_result_ids, 
         erc721_user_result,
-        setErc721_user_result
+        setErc721_user_result,
+
+        matchingPercent,
+        setMatchingPercent
 
     } = useContext(AppContext);
 
@@ -89,6 +94,7 @@ export default function ProfileFollowing({
         setErc721_user_result(null)
         setUser_result_ids(null)
         setUser_result_ids(null)
+        setMatchingPercent(null)
         setIsFetchingMore(true);
         const [response, newPageInfo] = await doGetFollowing(profileAddress, 1, prevFollwowingPageInfo.next)
         setFollowingList(response);
@@ -104,6 +110,7 @@ export default function ProfileFollowing({
         setErc721_user_result(null)
         setUser_result_ids(null)
         setUser_result_ids(null)
+        setMatchingPercent(null);
         setIsFetchingLess(true);
         const prevCursorNum = parseInt(prevFollowingPageInfo.prev.slice(10, prevFollowingPageInfo.prev.length-1)) - 1
         const prevCursor = `{\"offset\":${prevCursorNum}}`
@@ -121,27 +128,34 @@ export default function ProfileFollowing({
         const [temp_user_result_ids, temp_user_result] = await axios_getERC20(profileOwner);
         setUser_result_ids(temp_user_result_ids)
         setUser_result(temp_user_result)
-        console.log(temp_user_result.length)
+        // console.log(temp_user_result.length)
 
         const [erc721_temp_user_result_ids, erc721_temp_user_result] =  await axios_getERC721(profileOwner);
         setErc721_user_result_ids(erc721_temp_user_result_ids)
         setErc721_user_result(erc721_temp_user_result)
-        console.log(erc721_temp_user_result.length)
+        // console.log(erc721_temp_user_result.length)
 
-        // if(preference){
-        //     console.log(user_result_ids, preference)
-        //     const output = user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
-        //     console.log(output.length, preference.length, output.length/preference.length * 100);
-        //     console.log(user_result)
-        // }
-        // const [erc721_user_result_ids, erc721_user_result] = await axios_getERC721(profileOwner);
-        // if(erc721_preference){
-        //     console.log(erc721_user_result_ids, erc721_preference)
-        //     const erc721_output = erc721_user_result_ids.filter((obj) => erc721_preference.indexOf(obj) !== -1);
-        //     console.log(erc721_output.length, erc721_preference.length, erc721_output.length/erc721_preference.length * 100);
-        //     console.log(erc721_user_result)
-        // }
+        let output = 0, erc721_output = 0;
+
+        if(preference.length && temp_user_result.length){
+            console.log(temp_user_result_ids, preference)
+            output = temp_user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
+            console.log(output.length, temp_user_result.length, output.length/temp_user_result.length * 100);
+            // console.log(temp_user_result)
+            output = output.length/temp_user_result.length * 100
+        }
+        if(erc721_preference.length && erc721_temp_user_result.length){
+            console.log(erc721_temp_user_result_ids, erc721_preference)
+            erc721_output = erc721_temp_user_result_ids.filter((obj) => erc721_preference.indexOf(obj) !== -1);
+            console.log(erc721_output.length, erc721_temp_user_result.length, erc721_output.length/erc721_temp_user_result.length * 100);
+            // console.log(erc721_user_result)
+            erc721_output = erc721_output.length/erc721_temp_user_result.length * 100
+        }
+
+        console.log('matching', output, erc721_output, (output + erc721_output)/2)
+        setMatchingPercent((output + erc721_output)/2)
     }
+
 
     function getPreference() {
         if(signerAddress) {
@@ -182,6 +196,7 @@ export default function ProfileFollowing({
     function updateSearchHandle(currentHandle) {
         setProfileAddress(null);
         setFollowingList(null);
+        setMatchingPercent(null);
         setTempProfileHandleInput(currentHandle)
         setProfileHandleInput(currentHandle);
         setUser_result(null)
@@ -216,17 +231,16 @@ export default function ProfileFollowing({
                     <FollowingProfileSearch/>
                 </Flex>
                 <Button
-                    bg="darkgreen"
-                    textColor="white"
-                    size='md'
-                    onClick={() => {
-                        router.push({
-                            pathname: `/explore-profiles/preferences`,
-                        });
-                    }}
-                >
-                    Your Preferences 
-                </Button>
+                        bg="darkgreen"
+                        textColor="white"
+                        size='md'
+                    >
+                <Link href='/explore-profiles/preferences'>
+                    
+                        Your Preferences
+                    
+                    </Link>
+                    </Button>
 
             </Flex>
 
@@ -330,12 +344,31 @@ export default function ProfileFollowing({
                     
                     </>  
                     :
-                    profileHandleInput || profileAddress ? 
-                            !followingList ? 
-                            <p>Fetching following</p> 
-                            :
-                            <p>Empty following list</p> 
-                        : null
+                
+                            <VStack
+                                pt='100px'
+                                mx='230px'
+                                justifyContent='center'
+                            >
+                                {profileHandleInput || profileAddress ? 
+                                        !followingList ? 
+                                        <Spinner
+                                        thickness='4px'
+                                        speed='0.65s'
+                                        emptyColor='gray.200'
+                                        color='darkgreen'
+                                        size='xl'
+                                        mt='75px'
+                                        justifyContent='center'
+                                        ml='100px'
+                                        w={10} h={10}
+                                    />
+                                        :
+                                        <Text fontSize='2xl' textAlign='center'>You do not follow anyone <br/> at the moment !!</Text>
+                                    : null}
+                            </VStack>
+                    
+                    
                 }
                 </Flex>
             </HStack> 
@@ -367,20 +400,42 @@ export default function ProfileFollowing({
                 
             </HStack>
 
-            
+
             {/* { display matching percent and data } */}
-            {followingList && followingList.length ? <Flex
+            
+            {followingList && followingList.length ? 
+            
+            <Flex
                 justifyContent='center' 
                 mt='50px'
+                bg='grey'
             >
             <VStack>
-                <Text>Match percentage</Text>
             
+            {matchingPercent != null ? //  
+                <Stack
+                borderRadius='20px'
+                justifyContent='center'
+                px='10px'
+                bg='white'
+                mt='30px'
+                minW='500px'
+                minH='10px'
+                py='10px'
+                >
+                <Progress colorScheme='green' value={matchingPercent} borderRadius='20px'/>
+                </Stack>
+                : null}
+
+                {matchingPercent != null? 
+                <Text pt='1px' fontSize='lg' opacity='0.8' color='white' textAlign='center'>{matchingPercent} % match</Text>
+                :
+                null}
 
                 <HStack
                 spacing={20}
                 justifyItems='space-between'
-                mt='50px'
+                mt='30px'
                 alignItems='flex-start'
                 >
                     <Flex
@@ -396,9 +451,11 @@ export default function ProfileFollowing({
                             align='stretch'
                         >
 
-                        <Text fontSize='xl' textAlign='center'>ERC20 Match</Text>
+                        <Text fontSize='xl' textAlign='center' textColor='white'>ERC20 Data</Text>
 
-                        {user_result ? 
+                        {user_result ? user_result.length ?
+
+                        
                             user_result.map((obj, index) => {
                                 const i = erc20_contractAddress.indexOf(obj.contractAddress)
                                 if(i != -1){
@@ -409,6 +466,7 @@ export default function ProfileFollowing({
                                                 boxShadow='0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
                                                 w='500px'
                                                 px='20px'
+                                                bg='white'
                                             >
                                                 <HStack
                                                 alignItems='center'
@@ -427,10 +485,21 @@ export default function ProfileFollowing({
                                             </Box>
                                     )
                                 }
-                            })
+                            }) 
                             :
-                            null
-                            }
+                            <Text  textAlign='center' textColor='white'>User does not own any ERC20 tokens</Text>
+                            :
+                            <Spinner
+                                thickness='4px'
+                                speed='0.65s'
+                                emptyColor='gray.200'
+                                color='darkgreen'
+                                size='xl'
+                                mt='75px'
+                                w={10} h={10}
+                                ml='30px'
+                            />
+                            } 
 
                         </VStack>
                     </Flex>
@@ -448,9 +517,9 @@ export default function ProfileFollowing({
                             align='stretch'
                         >
 
-                        <Text fontSize='xl' textAlign='center'>ERC721 Match</Text>
+                        <Text fontSize='xl' textAlign='center' textColor='white'>ERC721 Data</Text>
 
-                        {erc721_user_result ?  
+                        {erc721_user_result ?  erc721_user_result.length ?
                             erc721_user_result.map((obj, index) => {
                                 if(!obj.name || !obj.name.length) {
                                     return null
@@ -462,6 +531,7 @@ export default function ProfileFollowing({
                                             boxShadow='0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
                                             w='500px'
                                             px='20px'
+                                            bg='white'
                                         >
                                             <HStack
                                             alignItems='center'
@@ -483,7 +553,18 @@ export default function ProfileFollowing({
                                 )
                             })
                             :
-                            null
+                            <Text  textAlign='center' textColor='white'>User does not own any ERC721 tokens</Text>
+                            :
+                            <Spinner
+                                thickness='4px'
+                                speed='0.65s'
+                                emptyColor='gray.200'
+                                color='darkgreen'
+                                size='xl'
+                                mt='75px'
+                                w={10} h={10}
+                                ml='30px'
+                            />
                             }
 
                         </VStack>

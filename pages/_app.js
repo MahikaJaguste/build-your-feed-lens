@@ -25,6 +25,7 @@ function MyApp({ Component, pageProps }) {
   const [user_result, setUser_result] = useState(null)
   const [erc721_user_result_ids, setErc721_user_result_ids] = useState(null)
   const [erc721_user_result, setErc721_user_result] = useState(null)
+  const [matchingPercent, setMatchingPercent] = useState(null)
     
   const contextObj = {
     provider,
@@ -63,7 +64,11 @@ function MyApp({ Component, pageProps }) {
     erc721_user_result_ids, 
     setErc721_user_result_ids, 
     erc721_user_result,
-    setErc721_user_result
+    setErc721_user_result,
+
+    matchingPercent,
+    setMatchingPercent,
+    
   }
 
   return (

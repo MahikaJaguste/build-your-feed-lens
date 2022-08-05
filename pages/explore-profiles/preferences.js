@@ -29,7 +29,10 @@ import {
     List,
     ListIcon,
     ListItem,
-  
+    Spinner,
+    SimpleGrid,
+
+
   } from "@chakra-ui/react";
 
 export default function Preferences({
@@ -79,8 +82,7 @@ export default function Preferences({
         erc721_setProtocolInfo(erc721_tempProtocolInfo)
     };
 
-    async function handleSubmit(e) {
-        e.preventDefault();
+    async function handleSubmit() {
         // console.log(protocolInfo);
         AddDocument_CustomID(signerAddress, protocolInfo);
         setPreference(protocolInfo)
@@ -144,11 +146,11 @@ export default function Preferences({
             bg="darkgreen"
             textColor="white"
             size='md'
-            onClick={() => {
-                router.push({
-                    pathname: `/explore-profiles`,
-                });
-            }}
+            // onClick={() => {
+            //     router.push({
+            //         pathname: `/explore-profiles`,
+            //     });
+            // }}
         >
             Back to Explore Profiles
         </Button>
@@ -157,13 +159,14 @@ export default function Preferences({
         </Flex>
 
         <Flex
-      align="center"
+      align="flex-start"
       justify={{ base: "center", md: "space-around", xl: "space-around" }}
       direction={{ base: "column-reverse", md: "row" }}
       wrap="no-wrap"
       minH="63vh"
       px={8}
       bg='grey'
+      py={4}
     >
 
     <Stack
@@ -179,6 +182,7 @@ export default function Preferences({
         bg='white'
         borderRadius='20'
         boxShadow='0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+        w='700px'
       >
       
       <Heading
@@ -193,59 +197,54 @@ export default function Preferences({
           ERC20 Tokens
       </Heading>
 
-      <List spacing={10} justifyContent='center'>
-        <ListItem>
-          <HStack>
-            <Text
-            fontSize="lg"
-            textAlign="center"
-            color="primary"
-          >
-            Which tokens and NFTs do you find interesting? <br/>Set your preferences accordingly.
-          </Text>
-          </HStack>
-        </ListItem>
-        <ListItem>
-        <HStack>
-            <Text
-            fontSize="lg"
-            textAlign="center"
-            color="primary"
-          >
-            Browse profiles being followed by someone.<br/>
-          See what assets they own.
-          </Text>
-          </HStack>
-          
-        </ListItem>
-        <ListItem>
-        <HStack>
-            <Text
-            fontSize="lg"
-            textAlign="center"
-            color="primary"
-          >
-            Like how they think ? Go follow them !
-          </Text>
-          </HStack>
-        </ListItem>
-      </List>
-        
-        {signerAddress ? 
-        <Link href='/explore-profiles' target='_blank'>
-          <Button
-            bg="darkgreen"
-            textColor="white"
-            size='md'
-            onClick={() => {
-                router.push({
-                    pathname: `/explore-profiles`,
-                });
-            }}
-        >
-            Explore Profiles
-        </Button>
-        </Link> : null }
+
+        { signerAddress ? 
+          <>
+            <SimpleGrid columns={2} spacing={4}>
+            {erc20_metadata.map((key, index) => {
+                return (
+                    <> 
+                      <HStack >
+                      <input
+                            onChange={handleChange} // <-- pass item to handler
+                            checked={protocolInfo.includes(`${key.id}`)}
+                            style={{ margin: "20px" }}
+                            type="checkbox"
+                            name={key.name}
+                            value={key.id}
+                        />
+                        <label>{key.name}</label><br/>
+                      </HStack>
+                    </>
+                )
+            }) }
+            </SimpleGrid>
+
+            {protocolInfo.length ? <Button
+              bg="darkgreen"
+              textColor="white"
+              size='md' onClick={handleSubmit}> Update</Button> : 
+              
+              <Button
+              bg="darkgreen"
+              textColor="white"
+              size='md' onClick={handleSubmit}> Save</Button>}
+            </>
+            
+            : 
+
+            <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='darkgreen'
+            size='xl'
+            mt='75px'
+            w={10} h={10}
+            />
+        }
+
+
         
       </Stack>
 
@@ -276,65 +275,60 @@ export default function Preferences({
           ERC721 Tokens (NFTs)
       </Heading>
 
-      <List spacing={10} justifyContent='center'>
-        <ListItem>
-          <HStack>
-            <Text
-            fontSize="lg"
-            textAlign="center"
-            color="primary"
-          >
-            Have a favorite group of content creators ? <br/>
-            Create your Lens Lists accordingly.
-          </Text>
-          </HStack>
-        </ListItem>
-        <ListItem>
-        <HStack>
-            <Text
-            fontSize="lg"
-            textAlign="center"
-            color="primary"
-          >
-            Create separate feeds on multiple themes - <br/>game updates, fashion tips, etc.d
-          </Text>
-          </HStack>
-          
-        </ListItem>
-        <ListItem>
-        <HStack>
-            <Text
-            fontSize="lg"
-            textAlign="center"
-            color="primary"
-          >
-            Own your curated list by minting a ListNFT !
-          </Text>
-          </HStack>
-        </ListItem>
-      </List>
-        
-      {signerAddress ? 
-        <Link href='/explore-profiles' target='_blank'>
-          <Button
-            bg="darkgreen"
-            textColor="white"
-            size='md'
-            onClick={() => {
-                router.push({
-                    pathname: `/explore-posts`,
-                });
-            }}
-        >
-            Explore Posts
-        </Button>
-        </Link> : null }
+
+        { signerAddress ? 
+          <>
+            <SimpleGrid columns={2} spacing={4}>
+            {erc721_metadata.map((key, index) => {
+                return (
+                    <> 
+                      <HStack >
+                      <input
+                            onChange={erc721_handleChange} // <-- pass item to handler
+                            checked={erc721_protocolInfo.includes(`${key.id}`)}
+                            style={{ margin: "20px" }}
+                            type="checkbox"
+                            name={key.name}
+                            value={key.id}
+                        />
+                        <label>{key.name}</label><br/>
+                      </HStack>
+                    </>
+                )
+            }) }
+            </SimpleGrid>
+
+            {erc721_protocolInfo.length ? <Button
+              bg="darkgreen"
+              textColor="white"
+              size='md' onClick={handleSubmit}> Update</Button> : 
+              
+              <Button
+              bg="darkgreen"
+              textColor="white"
+              size='md' onClick={handleSubmit}> Save</Button>}
+            </>
+            
+            : 
+
+            <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='darkgreen'
+            size='xl'
+            mt='75px'
+            w={10} h={10}
+            />
+        }
+
+
         
       </Stack>
 
     </Flex>
 
-        {signerAddress ?  
+        {/* {signerAddress ?  
         <form onSubmit={handleSubmit}>
         {
             erc20_metadata.map((key, index) => {
@@ -378,8 +372,8 @@ export default function Preferences({
         }
         {erc721_protocolInfo.length ? <button type="submit">Update</button> : <button type="submit">Save</button> }
         </form>
-        : 'Fetching your preferences...'}
-        </>
+      : 'Fetching your preferences...'} */}
+        </> 
   );
 }
 

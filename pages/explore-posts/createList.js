@@ -23,10 +23,26 @@ import { ethers } from 'ethers';
 
 const client = create("https://ipfs.infura.io:5001/api/v0");
 
+import { Flex,
+    Heading,
+    HStack,
+    Button,
+    Img,
+    Image,
+    VStack,
+    Text,
+    Icon,
+    StackDivider,
+    SimpleGrid,
+    Box,
+    Link,
+    Input,
+    Spinner
+} from '@chakra-ui/react';
+
 export default function CreateList() {
 
     const router = useRouter();
-    
 
     const { signer, signerAddress, provider } = useContext(AppContext);
     let listNFTContract;
@@ -34,9 +50,11 @@ export default function CreateList() {
     const [tempHandleInput, setTempHandleInput] = useState(undefined);
     const [creatorList, setCreatorList] = useState([]);
     const [listTitle, setListTitle] = useState(undefined);
+    const [creatorHandles, setCreatorHandles] = useState([]);
+    const [isCreating, setIsCreating] = useState(false)
 
-    async function handleAdd(e) {
-        e.preventDefault()
+
+    async function handleAdd() {
         let response
         if(tempHandleInput){
             response = await doGetProfile(tempHandleInput);
@@ -44,6 +62,7 @@ export default function CreateList() {
         if(response){
             if(!creatorList.includes(response.id)){
                 setCreatorList([...creatorList, response.id])
+                setCreatorHandles([...creatorHandles, response.handle])
             }
         }
         else{
@@ -53,6 +72,7 @@ export default function CreateList() {
     }
 
     async function handleCreateList(){
+        setIsCreating(true)
         await AddDocument_AutoID(signerAddress, listTitle, creatorList);
 
         const metadata = getMetadata(signerAddress, listTitle, creatorList);
@@ -67,49 +87,135 @@ export default function CreateList() {
 
         if(signer && listNFTContract) {
             // mint nft here
-            const txn = await listNFTContract.connect(signer).mint(signerAddress, `ipfs://${ipfsMetadata.path}`);
-            await txn.wait();
+            try {
+                const txn = await listNFTContract.connect(signer).mint(signerAddress, `ipfs://${ipfsMetadata.path}`);
+                await txn.wait();
+            }
+            catch (err) {
+                setIsCreating(false)
+            }
         }
         
         setCreatorList([])
         setListTitle(undefined)
         setTempHandleInput(undefined)
+        
     }   
 
     return (
     <>
         {signerAddress? null : <GetWeb3/>}
-        <form onSubmit={handleAdd}>
-            <label>Enter handle (eg. vitalik)</label>
-            <input 
+
+        <Flex
+        px="60px"
+        py='20px'
+        width="full"
+        justifyContent="space-between"
+        // bg='grey'
+        >
+        <Link href='/'>
+            <Img src='https://i.ibb.co/g7z0ZW0/logo.png' boxSize='75px'/>
+        </Link>
+        
+        <Heading 
+            // mr='60px'
+            fontSize={50}
+            letterSpacing='1.5px'
+            
+            >
+            Create your Lens List
+        </Heading>
+        
+        <Link href='/explore-posts'>
+          <Button
+            bg="darkgreen"
+            textColor="white"
+            size='md'
+            // onClick={() => {
+            //     router.push({
+            //         pathname: `/explore-profiles`,
+            //     });
+            // }}
+        >
+            Back to Explore Posts
+        </Button>
+        </Link>
+
+    </Flex>
+
+    <VStack
+        mr='100px'
+    >
+        {isCreating ? null : 
+        <HStack spacing='0px'>
+            <Input
                 type="text"  
                 id='listHandleInputForm'
-                onChange={(e) => setTempHandleInput(e.target.value)}/>
-            <button type="submit">Add</button>
-        </form>
+                onChange={(e) => setTempHandleInput(e.target.value)}
+                size='md'
+                placeholder="Search by profile handle (e.g. stani.lens)"
+                w="350px"
+            />
 
-        <p>Your List - </p>
+            <Button
+                bg="darkgreen"
+                textColor="white"
+                type='submit'
+                size='md'
+                onClick={() => {handleAdd()}}
+            >
+                Add
+            </Button>
+        </HStack>}
+
+
         {creatorList.length  ?
             <>
+
+            
             {creatorList.map((handle, index) => {
                 return (
-                    <p key={index}>{handle}</p>
+                <Text fontSize='lg' key={index}>
+                    {creatorHandles[index]} 
+                </Text>
                 )
             })}
-            <form>
-                <label>Enter list title</label>
-                <input 
-                    type="text"  
-                    id='listTitleForm'
-                    onChange={(e) => setListTitle(e.target.value)}/>
-            </form>
+
+            
+            <Input
+                type="text"  
+                id='listTitleForm'
+                onChange={(e) => setListTitle(e.target.value)}
+                size='md'
+                placeholder="Enter list title"
+                w="200px"
+            />
             
             {creatorList.length && listTitle ?
-                <button onClick={handleCreateList}>Create</button> 
+                isCreating ? <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='darkgreen'
+                size='xl'
+                mt='75px'
+                w={10} h={10}
+            /> : 
+                <Button
+                bg="darkgreen"
+                textColor="white"
+                type='submit'
+                size='md'
+                onClick={() => {handleCreateList()}}
+                
+                >
+                    Create
+                </Button>
             : null }
             </>
         : null
         }
+        </VStack>
     </>
     )
 }

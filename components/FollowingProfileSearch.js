@@ -44,7 +44,10 @@ function FollowingProfileSearch() {
         erc721_user_result_ids, 
         setErc721_user_result_ids, 
         erc721_user_result,
-        setErc721_user_result
+        setErc721_user_result,
+
+        matchingPercent,
+        setMatchingPercent
      } = useContext(AppContext);
 
     async function handleSearch() {
@@ -99,12 +102,32 @@ function FollowingProfileSearch() {
         const [temp_user_result_ids, temp_user_result] = await axios_getERC20(profileOwner);
         setUser_result_ids(temp_user_result_ids)
         setUser_result(temp_user_result)
-        console.log(temp_user_result.length)
+        // console.log(temp_user_result.length)
 
         const [erc721_temp_user_result_ids, erc721_temp_user_result] =  await axios_getERC721(profileOwner);
         setErc721_user_result_ids(erc721_temp_user_result_ids)
         setErc721_user_result(erc721_temp_user_result)
-        console.log(erc721_temp_user_result.length)
+        // console.log(erc721_temp_user_result.length)
+
+        let output = 0, erc721_output = 0;
+
+        if(preference.length && temp_user_result.length){
+            console.log(temp_user_result_ids, preference)
+            output = temp_user_result_ids.filter((obj) => preference.indexOf(obj) !== -1);
+            console.log(output.length, temp_user_result.length, output.length/temp_user_result.length * 100);
+            // console.log(temp_user_result)
+            output = output.length/temp_user_result.length * 100
+        }
+        if(erc721_preference.length && erc721_temp_user_result.length){
+            console.log(erc721_temp_user_result_ids, erc721_preference)
+            erc721_output = erc721_temp_user_result_ids.filter((obj) => erc721_preference.indexOf(obj) !== -1);
+            console.log(erc721_output.length, erc721_temp_user_result.length, erc721_output.length/erc721_temp_user_result.length * 100);
+            // console.log(erc721_user_result)
+            erc721_output = erc721_output.length/erc721_temp_user_result.length * 100
+        }
+
+        console.log('matching', output, erc721_output, (output + erc721_output)/2)
+        setMatchingPercent((output + erc721_output)/2)
     }
 
     return (
