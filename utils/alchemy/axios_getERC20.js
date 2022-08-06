@@ -8,8 +8,9 @@ async function axios_getERC20 (address) {
 
     let user_result_ids = [], user_result = [];
 
+    const ALCHEMY_TOKEN_API_KEY="NQSuAhlOs706-XBHAkbF6rbLJ50InHTj"
     // Alchemy URL
-    const baseURL = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_TOKEN_API_KEY}`;
+    const baseURL = `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_TOKEN_API_KEY}`;
 
     const data = JSON.stringify({
     "jsonrpc": "2.0",

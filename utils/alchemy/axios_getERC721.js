@@ -3,9 +3,9 @@ const axios = require('axios')
 async function axios_getERC721 (address) {
     
     // address = 'elanhalpern.eth'
-    
+    const ALCHEMY_TOKEN_API_KEY="NQSuAhlOs706-XBHAkbF6rbLJ50InHTj"
     // Alchemy URL
-    const baseURL = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_TOKEN_API_KEY}`;
+    const baseURL = `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_TOKEN_API_KEY}`;
     const url = `${baseURL}/getNFTs/?owner=${address}`;
 
     const config = {

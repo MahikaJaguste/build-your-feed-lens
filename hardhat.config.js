@@ -4,7 +4,7 @@ require('@nomiclabs/hardhat-ethers');
 require("@nomiclabs/hardhat-etherscan");
 require("@nomicfoundation/hardhat-chai-matchers");
 require("hardhat-deploy");
-require('dotenv').config();
+// require('dotenv').config();
 
 const infuraProjectId = process.env.INFURA_PROJECT_ID;
 const mnemonic = process.env.MNEMONIC;

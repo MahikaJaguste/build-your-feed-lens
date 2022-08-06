@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-// import firebaseConfig from './firebaseConfig.js';
+import firebaseConfig from './firebaseConfig.js';
 
-const firebaseConfig = JSON.parse(process.env.firebaseConfig)
+// const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_firebaseConfig)
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
